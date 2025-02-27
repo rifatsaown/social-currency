@@ -12,7 +12,7 @@ const Navbar = () => {
   const menuItemsRef = useRef<(HTMLAnchorElement | HTMLButtonElement | null)[]>(
     []
   );
-  const lineRef = useRef(null);
+  const lineRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef(null);
   const iconRef = useRef(null);
 
@@ -21,7 +21,11 @@ const Navbar = () => {
     gsap.set(menuRef.current, { x: '-100%', opacity: 0 }); // Changed to start from left (-100%)
     gsap.set(overlayRef.current, { opacity: 0 });
     gsap.set(menuItemsRef.current, { opacity: 0, y: 20 });
-    gsap.set(lineRef.current, { scaleX: 0, transformOrigin: 'left top' });
+    gsap.set(lineRef.current, {
+      scaleX: 0,
+      scaleY: 0, // Initial scaleY is 0
+      transformOrigin: 'left top',
+    });
     setIsInitialized(true);
   }, []);
 
@@ -55,9 +59,9 @@ const Navbar = () => {
       // Enhanced line animation
       gsap.to(lineRef.current, {
         scaleX: 1,
-        width: '100%',
-        height: '100%',
-        rotation: 45,
+        scaleY: 1, // Animate scaleY to 1
+        width: '150vw', // Make it wider
+        height: '150vh', // Make it taller
         duration: 0.6, // Faster animation for mobile
         ease: 'power2.inOut',
         onComplete: () => {
@@ -152,9 +156,9 @@ const Navbar = () => {
       // Line animation with spring effect
       gsap.to(lineRef.current, {
         scaleX: 0,
+        scaleY: 0, // Animate scaleY back to 0
         width: '100%',
         height: '100%',
-        rotation: 0,
         duration: 0.4, // Faster for mobile
         ease: 'power2.out',
         onComplete: () => setIsAnimating(false),
@@ -176,9 +180,9 @@ const Navbar = () => {
         <button
           ref={buttonRef}
           onClick={toggleMenu}
-          className="p-2 sm:p-3 rounded-full bg-black bg-opacity-80 text-white hover:bg-opacity-95 transition-all duration-200 
-            shadow-lg hover:shadow-purple-500/30 flex items-center justify-center border border-gray-700
-            hover:border-purple-500 active:scale-95 touch-manipulation"
+          className="p-2 sm:p-3 rounded-full bg-black bg-opacity-80 text-white hover:bg-opacity-95 transition-all duration-200
+          shadow-lg hover:shadow-purple-500/30 flex items-center justify-center border border-gray-700
+          hover:border-purple-500 active:scale-95 touch-manipulation"
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           disabled={isAnimating}
           style={{ WebkitTapHighlightColor: 'transparent' }} // Remove tap highlight on mobile
@@ -221,13 +225,13 @@ const Navbar = () => {
               }}
               href="#"
               className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light py-3 my-1
-                hover:text-transparent bg-clip-text bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 
-                transition-colors duration-300 relative group w-full text-center"
+              hover:text-transparent bg-clip-text bg-gradient-to-r hover:from-purple-400 hover:to-pink-400
+              transition-colors duration-300 relative group w-full text-center"
             >
               {item}
               <span
-                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 
-                bg-gradient-to-r from-purple-500 to-pink-500 
+                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5
+                bg-gradient-to-r from-purple-500 to-pink-500
                 group-hover:w-3/4 transition-all duration-300 ease-out"
               ></span>
             </a>
