@@ -18,12 +18,12 @@ const Navbar = () => {
 
   // Initialize menu position on first render
   useEffect(() => {
-    gsap.set(menuRef.current, { x: '-100%', opacity: 0 }); // Changed to start from left (-100%)
+    gsap.set(menuRef.current, { x: '-100%', opacity: 0 });
     gsap.set(overlayRef.current, { opacity: 0 });
     gsap.set(menuItemsRef.current, { opacity: 0, y: 20 });
     gsap.set(lineRef.current, {
       scaleX: 0,
-      scaleY: 0, // Initial scaleY is 0
+      scaleY: 0,
       transformOrigin: 'left top',
     });
     setIsInitialized(true);
@@ -34,38 +34,38 @@ const Navbar = () => {
 
     setIsAnimating(true);
 
-    // Button animation on any state change - more tactile feedback
+    // Button animation - faster and smoother
     gsap.to(buttonRef.current, {
-      scale: 0.85,
-      duration: 0.15,
-      ease: 'power1.out',
+      scale: 0.9,
+      duration: 0.15, // Faster button scale
+      ease: 'power3.easeInOut',
       onComplete: () => {
         gsap.to(buttonRef.current, {
           scale: 1,
-          duration: 0.3,
-          ease: 'elastic.out(1.2, 0.5)',
+          duration: 0.25, // Faster button scale return
+          ease: 'power3.easeInOut',
         });
       },
     });
 
-    // Icon rotation with better animation
+    // Icon rotation - faster and smoother
     gsap.to(iconRef.current, {
-      rotation: isMenuOpen ? 180 : 0, // Full rotation for more dramatic effect
-      duration: 0.4,
-      ease: 'back.out(1.7)',
+      rotation: isMenuOpen ? 180 : 0,
+      duration: 0.3, // Faster icon rotation
+      ease: 'power3.easeInOut',
     });
 
     if (isMenuOpen) {
-      // Enhanced line animation
+      // Line animation - faster and smoother
       gsap.to(lineRef.current, {
         scaleX: 1,
-        scaleY: 1, // Animate scaleY to 1
-        width: '150vw', // Make it wider
-        height: '150vh', // Make it taller
-        duration: 0.6, // Faster animation for mobile
-        ease: 'power2.inOut',
+        scaleY: 1,
+        width: '150vw',
+        height: '150vh',
+        duration: 0.45, // Faster line animation
+        ease: 'power3.easeInOut',
         onComplete: () => {
-          // Fancy overlay animation optimized for mobile
+          // Overlay animation - faster and smoother
           gsap.fromTo(
             overlayRef.current,
             {
@@ -74,99 +74,99 @@ const Navbar = () => {
               backdropFilter: 'blur(0px)',
             },
             {
-              backgroundColor: 'rgba(0, 0, 0, 0.8)', // Darker background for better mobile readability
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
               opacity: 1,
-              backdropFilter: 'blur(8px)', // Less blur for better performance
-              duration: 0.5, // Faster for mobile
-              ease: 'power2.out',
+              backdropFilter: 'blur(8px)',
+              duration: 0.4, // Faster overlay
+              ease: 'power3.easeInOut',
             }
           );
 
-          // Menu reveal with slide from left to right
+          // Menu reveal - faster and smoother
           gsap.fromTo(
             menuRef.current,
-            { x: '-100%', opacity: 0, skewX: '-5deg' }, // Start from left side
+            { x: '-100%', opacity: 0, skewX: '-5deg' },
             {
               x: '0%',
               opacity: 1,
               skewX: '0deg',
-              duration: 0.6, // Faster for mobile
-              ease: 'expo.out',
+              duration: 0.45, // Faster menu reveal
+              ease: 'expo.easeInOut',
             }
           );
 
-          // Enhanced menu items animation - simpler on mobile for better performance
+          // Menu items animation - faster and smoother
           gsap.fromTo(
-            menuItemsRef.current.slice(0, 4), // Animate only the first 4 items (links)
-            { opacity: 0, y: 20, scale: 0.9 }, // Less extreme animation starts for mobile
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              stagger: 0.05, // Faster stagger for mobile
-              delay: 0.2, // Less delay for mobile
-              duration: 0.4, // Faster duration for mobile
-              ease: 'back.out(1.5)',
-            }
-          );
-
-          // CustomButton specific animation
-          gsap.fromTo(
-            menuItemsRef.current[4], // CustomButton is the 5th item
+            menuItemsRef.current.slice(0, 4),
             { opacity: 0, y: 20, scale: 0.9 },
             {
               opacity: 1,
               y: 0,
               scale: 1,
-              delay: 0.4, // Less delay for mobile
-              duration: 0.4, // Faster for mobile
-              ease: 'back.out(1.5)',
+              stagger: 0.07, // Slightly faster stagger
+              delay: 0.15, // Reduced delay
+              duration: 0.35, // Faster menu items
+              ease: 'power3.easeInOut',
+            }
+          );
+
+          // CustomButton animation - faster and smoother
+          gsap.fromTo(
+            menuItemsRef.current[4],
+            { opacity: 0, y: 20, scale: 0.9 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              delay: 0.25, // Reduced delay
+              duration: 0.35, // Faster button animation
+              ease: 'power3.easeInOut',
               onComplete: () => setIsAnimating(false),
             }
           );
         },
       });
     } else {
-      // Enhanced menu exit animation - slide from right to left (opposite direction)
+      // Menu exit animation - faster and smoother
       gsap.to(menuRef.current, {
-        x: '-100%', // Exit to the left
+        x: '-100%',
         opacity: 0,
-        skewX: '-2deg', // Match the entry skew direction
-        duration: 0.4, // Faster for mobile
-        ease: 'power2.inOut',
+        skewX: '-2deg',
+        duration: 0.35, // Faster menu exit
+        ease: 'power3.easeInOut',
       });
 
-      // Fade out menu items with simplified cascade effect for mobile
+      // Menu items fade - faster and smoother
       gsap.to(menuItemsRef.current, {
         opacity: 0,
-        y: -10, // Less extreme for mobile
-        stagger: 0.03, // Faster for mobile
-        duration: 0.3, // Faster for mobile
-        ease: 'power2.in',
+        y: -10,
+        stagger: 0.04, // Slightly faster stagger
+        duration: 0.25, // Faster item fade
+        ease: 'power2.easeInOut',
       });
 
-      // Fancy overlay fade out - optimized for mobile
+      // Overlay fade - faster and smoother
       gsap.to(overlayRef.current, {
         opacity: 0,
         backdropFilter: 'blur(0px)',
-        duration: 0.4, // Faster for mobile
-        ease: 'power2.inOut',
+        duration: 0.35, // Faster overlay fade
+        ease: 'power3.easeInOut',
       });
 
-      // Line animation with spring effect
+      // Line animation - faster and smoother
       gsap.to(lineRef.current, {
         scaleX: 0,
-        scaleY: 0, // Animate scaleY back to 0
+        scaleY: 0,
         width: '100%',
         height: '100%',
-        duration: 0.4, // Faster for mobile
-        ease: 'power2.out',
+        duration: 0.35, // Faster line animation
+        ease: 'power3.easeInOut',
         onComplete: () => setIsAnimating(false),
       });
     }
   }, [isMenuOpen, isInitialized]);
 
-  // Toggle menu handler with debounce
+  // Toggle menu handler
   const toggleMenu = () => {
     if (!isAnimating) {
       setIsMenuOpen(!isMenuOpen);
@@ -175,7 +175,7 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 right-0 z-50 w-full">
-      {/* Mobile-optimized hamburger button */}
+      {/* Hamburger button */}
       <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
         <button
           ref={buttonRef}
@@ -185,7 +185,7 @@ const Navbar = () => {
           hover:border-purple-500 active:scale-95 touch-manipulation"
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           disabled={isAnimating}
-          style={{ WebkitTapHighlightColor: 'transparent' }} // Remove tap highlight on mobile
+          style={{ WebkitTapHighlightColor: 'transparent' }}
         >
           <div ref={iconRef} className="transform transition-none">
             {isMenuOpen ? (
@@ -197,20 +197,20 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Overlay with improved blur effect - mobile optimized */}
+      {/* Overlay */}
       <div
         ref={overlayRef}
         className="fixed inset-0 backdrop-blur-0 transition-all pointer-events-none bg-gradient-to-br from-black/80 to-purple-900/50"
         style={{ display: isInitialized ? 'block' : 'none' }}
       />
 
-      {/* Line with enhanced gradient - mobile optimized */}
+      {/* Line */}
       <div
         ref={lineRef}
         className="fixed top-0 left-0 w-screen h-screen bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-600 origin-top-left"
       />
 
-      {/* Fullscreen menu with glass morphism effect - mobile optimized */}
+      {/* Fullscreen menu */}
       <div
         ref={menuRef}
         className="fixed inset-0 h-screen w-screen bg-black/85 text-white flex flex-col items-center justify-center space-y-5 sm:space-y-8 backdrop-blur-2xl"
