@@ -3,4 +3,8 @@ export interface CustomButtonProps {
     onClick?: () => void;
     className?: string;
   }
-  
+
+export interface ParallaxEvent {
+  clientX: number;
+  clientY: number;
+}
