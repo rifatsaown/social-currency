@@ -18,7 +18,7 @@ const Navbar = () => {
 
   // Initialize menu position on first render
   useEffect(() => {
-    gsap.set(menuRef.current, { x: '100%', opacity: 0 });
+    gsap.set(menuRef.current, { x: '-100%', opacity: 0 }); // Changed to start from left (-100%)
     gsap.set(overlayRef.current, { opacity: 0 });
     gsap.set(menuItemsRef.current, { opacity: 0, y: 20 });
     gsap.set(lineRef.current, { scaleX: 0, transformOrigin: 'left top' });
@@ -30,10 +30,10 @@ const Navbar = () => {
 
     setIsAnimating(true);
 
-    // Button animation on any state change
+    // Button animation on any state change - more tactile feedback
     gsap.to(buttonRef.current, {
-      scale: 0.9,
-      duration: 0.2,
+      scale: 0.85,
+      duration: 0.15,
       ease: 'power1.out',
       onComplete: () => {
         gsap.to(buttonRef.current, {
@@ -44,10 +44,10 @@ const Navbar = () => {
       },
     });
 
-    // Icon rotation
+    // Icon rotation with better animation
     gsap.to(iconRef.current, {
-      rotation: isMenuOpen ? 90 : 0,
-      duration: 0.5,
+      rotation: isMenuOpen ? 180 : 0, // Full rotation for more dramatic effect
+      duration: 0.4,
       ease: 'back.out(1.7)',
     });
 
@@ -58,10 +58,10 @@ const Navbar = () => {
         width: '100%',
         height: '100%',
         rotation: 45,
-        duration: 0.8,
+        duration: 0.6, // Faster animation for mobile
         ease: 'power2.inOut',
         onComplete: () => {
-          // Fancy overlay animation
+          // Fancy overlay animation optimized for mobile
           gsap.fromTo(
             overlayRef.current,
             {
@@ -70,70 +70,82 @@ const Navbar = () => {
               backdropFilter: 'blur(0px)',
             },
             {
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)', // Darker background for better mobile readability
               opacity: 1,
-              backdropFilter: 'blur(10px)',
-              duration: 0.8,
+              backdropFilter: 'blur(8px)', // Less blur for better performance
+              duration: 0.5, // Faster for mobile
               ease: 'power2.out',
             }
           );
 
-          // Menu reveal with wave effect
+          // Menu reveal with slide from left to right
           gsap.fromTo(
             menuRef.current,
-            { x: '100%', opacity: 0, skewX: '5deg' },
+            { x: '-100%', opacity: 0, skewX: '-5deg' }, // Start from left side
             {
               x: '0%',
               opacity: 1,
               skewX: '0deg',
-              duration: 0.9,
+              duration: 0.6, // Faster for mobile
               ease: 'expo.out',
             }
           );
 
-          // Enhanced menu items animation
+          // Enhanced menu items animation - simpler on mobile for better performance
           gsap.fromTo(
-            menuItemsRef.current,
-            { opacity: 0, y: 40, rotationX: 30, scale: 0.8 },
+            menuItemsRef.current.slice(0, 4), // Animate only the first 4 items (links)
+            { opacity: 0, y: 20, scale: 0.9 }, // Less extreme animation starts for mobile
             {
               opacity: 1,
               y: 0,
-              rotationX: 0,
               scale: 1,
-              stagger: 0.08,
-              delay: 0.3,
-              duration: 0.7,
-              ease: 'back.out(1.7)',
+              stagger: 0.05, // Faster stagger for mobile
+              delay: 0.2, // Less delay for mobile
+              duration: 0.4, // Faster duration for mobile
+              ease: 'back.out(1.5)',
+            }
+          );
+
+          // CustomButton specific animation
+          gsap.fromTo(
+            menuItemsRef.current[4], // CustomButton is the 5th item
+            { opacity: 0, y: 20, scale: 0.9 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              delay: 0.4, // Less delay for mobile
+              duration: 0.4, // Faster for mobile
+              ease: 'back.out(1.5)',
               onComplete: () => setIsAnimating(false),
             }
           );
         },
       });
     } else {
-      // Enhanced menu exit animation
+      // Enhanced menu exit animation - slide from right to left (opposite direction)
       gsap.to(menuRef.current, {
-        x: '100%',
+        x: '-100%', // Exit to the left
         opacity: 0,
-        skewX: '3deg',
-        duration: 0.6,
-        ease: 'power3.inOut',
+        skewX: '-2deg', // Match the entry skew direction
+        duration: 0.4, // Faster for mobile
+        ease: 'power2.inOut',
       });
 
-      // Fade out menu items with cascade effect
+      // Fade out menu items with simplified cascade effect for mobile
       gsap.to(menuItemsRef.current, {
         opacity: 0,
-        y: -20,
-        rotationX: -15,
-        stagger: 0.05,
-        duration: 0.4,
+        y: -10, // Less extreme for mobile
+        stagger: 0.03, // Faster for mobile
+        duration: 0.3, // Faster for mobile
         ease: 'power2.in',
       });
 
-      // Fancy overlay fade out
+      // Fancy overlay fade out - optimized for mobile
       gsap.to(overlayRef.current, {
         opacity: 0,
         backdropFilter: 'blur(0px)',
-        duration: 0.5,
+        duration: 0.4, // Faster for mobile
         ease: 'power2.inOut',
       });
 
@@ -143,8 +155,8 @@ const Navbar = () => {
         width: '100%',
         height: '100%',
         rotation: 0,
-        duration: 0.6,
-        ease: 'elastic.out(0.5, 0.3)',
+        duration: 0.4, // Faster for mobile
+        ease: 'power2.out',
         onComplete: () => setIsAnimating(false),
       });
     }
@@ -158,65 +170,77 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 right-0 z-50">
-      <div className="fixed top-4 right-4 z-50">
+    <nav className="fixed top-0 right-0 z-50 w-full">
+      {/* Mobile-optimized hamburger button */}
+      <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
         <button
           ref={buttonRef}
           onClick={toggleMenu}
-          className="p-2 md:p-3 rounded-full bg-black bg-opacity-70 text-white hover:bg-opacity-90 transition-all duration-300 
-            shadow-lg hover:shadow-xl flex items-center justify-center border border-gray-700
-            hover:border-purple-500 active:scale-95"
+          className="p-2 sm:p-3 rounded-full bg-black bg-opacity-80 text-white hover:bg-opacity-95 transition-all duration-200 
+            shadow-lg hover:shadow-purple-500/30 flex items-center justify-center border border-gray-700
+            hover:border-purple-500 active:scale-95 touch-manipulation"
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           disabled={isAnimating}
+          style={{ WebkitTapHighlightColor: 'transparent' }} // Remove tap highlight on mobile
         >
           <div ref={iconRef} className="transform transition-none">
             {isMenuOpen ? (
-              <X size={24} className="md:w-7 md:h-7" />
+              <X size={22} className="sm:w-6 sm:h-6" />
             ) : (
-              <Menu size={24} className="md:w-7 md:h-7" />
+              <Menu size={22} className="sm:w-6 sm:h-6" />
             )}
           </div>
         </button>
       </div>
 
-      {/* Overlay with improved blur effect */}
+      {/* Overlay with improved blur effect - mobile optimized */}
       <div
         ref={overlayRef}
-        className="fixed inset-0 backdrop-blur-0 transition-all pointer-events-none bg-gradient-to-br from-black/60 to-purple-900/40"
+        className="fixed inset-0 backdrop-blur-0 transition-all pointer-events-none bg-gradient-to-br from-black/80 to-purple-900/50"
         style={{ display: isInitialized ? 'block' : 'none' }}
       />
 
-      {/* Line with enhanced gradient */}
+      {/* Line with enhanced gradient - mobile optimized */}
       <div
         ref={lineRef}
-        className="fixed top-0 left-0 w-screen h-screen bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-600 z-40 origin-top-left"
+        className="fixed top-0 left-0 w-screen h-screen bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-600 origin-top-left"
       />
 
-      {/* Fullscreen menu with glass morphism effect */}
+      {/* Fullscreen menu with glass morphism effect - mobile optimized */}
       <div
         ref={menuRef}
-        className="fixed inset-0 h-screen w-screen bg-black/80 text-white flex flex-col items-center justify-center space-y-8 backdrop-blur-md"
+        className="fixed inset-0 h-screen w-screen bg-black/85 text-white flex flex-col items-center justify-center space-y-5 sm:space-y-8 backdrop-blur-2xl"
         style={{ display: isInitialized ? 'flex' : 'none' }}
       >
-        {['Home', 'Features', 'About', 'Contact'].map((item, index) => (
-          <a
-            key={item}
-            ref={(el) => {
-              menuItemsRef.current[index] = el;
-            }}
-            href="#"
-            className="text-2xl md:text-4xl font-light hover:text-transparent bg-clip-text bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 transition-colors duration-500 relative group"
-          >
-            {item}
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-500 ease-out"></span>
-          </a>
-        ))}
-        <CustomButton
-          ref={(el) => {
-            menuItemsRef.current[4] = el;
-          }}
-          buttonText="Get Started"
-        />
+        <div className="w-full max-w-md px-6 flex flex-col items-center">
+          {['Home', 'Features', 'About', 'Contact'].map((item, index) => (
+            <a
+              key={item}
+              ref={(el) => {
+                menuItemsRef.current[index] = el;
+              }}
+              href="#"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light py-3 my-1
+                hover:text-transparent bg-clip-text bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 
+                transition-colors duration-300 relative group w-full text-center"
+            >
+              {item}
+              <span
+                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 
+                bg-gradient-to-r from-purple-500 to-pink-500 
+                group-hover:w-3/4 transition-all duration-300 ease-out"
+              ></span>
+            </a>
+          ))}
+          <div className="mt-4 sm:mt-6">
+            <CustomButton
+              ref={(el) => {
+                menuItemsRef.current[4] = el;
+              }}
+              buttonText="Get Started"
+            />
+          </div>
+        </div>
       </div>
     </nav>
   );
