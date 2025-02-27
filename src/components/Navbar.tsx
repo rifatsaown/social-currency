@@ -217,7 +217,7 @@ const Navbar = () => {
         style={{ display: isInitialized ? 'flex' : 'none' }}
       >
         <div className="w-full max-w-md px-6 flex flex-col items-center">
-          {['Home', 'Features', 'About', 'Contact'].map((item, index) => (
+          {['Home', 'Features', 'cards', 'About', 'Contact'].map((item, index) => (
             <a
               key={item}
               ref={(el) => {
@@ -228,7 +228,7 @@ const Navbar = () => {
               hover:text-transparent bg-clip-text bg-gradient-to-r hover:from-purple-400 hover:to-pink-400
               transition-colors duration-300 relative group w-full text-center"
             >
-              {item}
+              {item.toUpperCase()}
               <span
                 className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5
                 bg-gradient-to-r from-purple-500 to-pink-500
