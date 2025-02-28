@@ -12,82 +12,274 @@ const BuyPostEarn = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionsContainerRef = useRef<HTMLDivElement>(null);
   const linesContainerRef = useRef<HTMLDivElement>(null);
+  const particlesContainerRef = useRef<HTMLDivElement>(null);
 
+  // Create a more optimized animation setup
   useEffect(() => {
-    const lineCount = 8;
-    const linesContainer = linesContainerRef.current;
+    // Create background lines with improved performance
+    const createBackgroundLines = () => {
+      const lineCount = 8;
+      const linesContainer = linesContainerRef.current;
 
-    if (linesContainer) {
-      for (let i = 0; i < lineCount; i++) {
-        const line = document.createElement('div');
-        line.className =
-          'absolute bg-gradient-to-b from-purple-200 via-gray-700 to-purple-500 opacity-10 w-4';
-        line.style.left = `${((i + 1) * 100) / (lineCount + 1)}%`;
-        line.style.top = '0';
-        line.style.bottom = '0';
-        line.style.transform = 'translateY(-100%)';
-        linesContainer.appendChild(line);
-
-        gsap.to(line, {
-          y: 0,
-          duration: 1.5,
-          delay: i * 0.1,
-          ease: 'power2.out',
+      if (linesContainer) {
+        linesContainer.innerHTML = ''; // Clear previous lines for cleaner re-renders
+        
+        // Create all lines at once for better performance
+        const fragment = document.createDocumentFragment();
+        
+        for (let i = 0; i < lineCount; i++) {
+          const line = document.createElement('div');
+          line.className = 'absolute bg-gradient-to-b from-purple-200 via-gray-700 to-purple-500 opacity-10 w-4';
+          line.style.left = `${((i + 1) * 100) / (lineCount + 1)}%`;
+          line.style.top = '0';
+          line.style.bottom = '0';
+          line.style.transform = 'translateY(-100%)';
+          fragment.appendChild(line);
+        }
+        
+        linesContainer.appendChild(fragment);
+        
+        // Animate all lines with a single timeline for better performance
+        const lines = linesContainer.querySelectorAll('div');
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: containerRef.current,
             start: 'top 70%',
             end: 'bottom 70%',
             scrub: 1.5,
-          },
+          }
         });
-
-        gsap.to(line, {
-          scaleY: 1.1,
-          yoyo: true,
-          repeat: -1,
-          duration: 3,
-          ease: 'sine.inOut',
+        
+        lines.forEach((line, i) => {
+          tl.to(line, {
+            y: 0,
+            duration: 1.5,
+            delay: i * 0.1,
+            ease: 'power2.out',
+          }, 0);
+          
+          // Add subtle wave effect to each line
+          gsap.to(line, {
+            scaleY: 1.1 + (i % 3) * 0.1, // Varied scaling for more organic feel
+            yoyo: true,
+            repeat: -1,
+            duration: 3 + i * 0.5, // Varied durations for asynchronous movement
+            ease: 'sine.inOut',
+          });
         });
       }
-    }
+    };
 
-    const ctx = gsap.context(() => {
-      const sections = document.querySelectorAll('.section-panel');
-      // Set up the horizontal scroll container
-      gsap.set(sectionsContainerRef.current, {
-        width: `${sections.length * 100}vw`,
-        display: 'flex',
-        flexDirection: 'row',
+    // Create floating particles for futuristic background effect
+    const createBackgroundParticles = () => {
+      const particlesContainer = particlesContainerRef.current;
+      if (!particlesContainer) return;
+      
+      particlesContainer.innerHTML = '';
+      const particleCount = 25; // Reduced count for performance
+      const fragment = document.createDocumentFragment();
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const size = Math.random() * 6 + 2; // 2-8px sized particles
+        const isCircle = Math.random() > 0.5;
+        
+        particle.className = `absolute ${isCircle ? 'rounded-full' : 'rounded-sm'} opacity-20`;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        // Assign different colors
+        const colors = ['bg-purple-400', 'bg-pink-400', 'bg-teal-400', 'bg-indigo-400', 'bg-blue-400'];
+        particle.classList.add(colors[Math.floor(Math.random() * colors.length)]);
+        
+        fragment.appendChild(particle);
+      }
+      
+      particlesContainer.appendChild(fragment);
+      
+      // Animate particles with batch method for performance
+      const particles = particlesContainer.querySelectorAll('div');
+      particles.forEach(particle => {
+        // Random starting position for staggered effect
+        gsap.set(particle, {
+          x: gsap.utils.random(-100, 100),
+          y: gsap.utils.random(-100, 100),
+          opacity: gsap.utils.random(0.1, 0.4)
+        });
+        
+        // Create floating animation
+        gsap.to(particle, {
+          x: gsap.utils.random(-100, 100), 
+          y: gsap.utils.random(-100, 100),
+          rotation: gsap.utils.random(-180, 180),
+          duration: gsap.utils.random(15, 30),
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+        
+        // Pulse opacity for extra dimension
+        gsap.to(particle, {
+          opacity: gsap.utils.random(0.05, 0.2),
+          duration: gsap.utils.random(2, 5),
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
       });
+    };
+
+    // Set up the horizontal scroll and section transitions
+    const setupScrollTrigger = () => {
+      const sections = document.querySelectorAll('.section-panel');
+      
+      // Clean previous instances to prevent memory leaks
+      ScrollTrigger.getAll().forEach(st => st.kill());
+      
+      // Set up the horizontal scroll container (with fewer reflows)
+      if (sectionsContainerRef.current) {
+        gsap.set(sectionsContainerRef.current, {
+          width: `${sections.length * 100}vw`,
+          display: 'flex',
+          flexDirection: 'row',
+        });
+      }
 
       // Set each section to take up 100vw width
       gsap.set(sections, { width: '100vw' });
 
-      // Create the horizontal scroll trigger with longer scroll and snapping
+      // Main scroll animation - more optimized
+      const scrubValue = window.innerWidth > 768 ? 0.8 : 1.2; // Responsive scrub value
+
+      // Create the horizontal scroll trigger with snap points
       ScrollTrigger.create({
         id: 'mainScroll',
         trigger: containerRef.current,
         pin: true,
         pinSpacing: true,
         start: 'top top',
-        end: () => `+=${sections.length * 900}vh`, // Much longer scroll distance
-        scrub: 1, // Smoother scrub for better control
+        end: () => `+=${sections.length * 800}vh`, // Slightly reduced for smoother scrolling
+        scrub: scrubValue,
         anticipatePin: 1,
         animation: gsap.to(sectionsContainerRef.current, {
           x: () => -(sections.length - 1) * window.innerWidth,
           ease: 'none',
-          duration: 3, // Increased for smoother animation
+          duration: 3,
         }),
       });
-    });
 
-    return () => {
-      ctx.revert();
-      if (linesContainer) {
-        linesContainer.innerHTML = '';
-      }
+      // Set up section-specific animations
+      sections.forEach((section, index) => {
+        const elements = section.querySelectorAll('.animate-in');
+        const image = section.querySelector('img');
+        const decorCircle = section.querySelector('.decorative-circle');
+        const decorTag = section.querySelector('.decorative-tag');
+        
+        // Create a timeline for each section
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            containerAnimation: ScrollTrigger.getById('mainScroll')?.animation,
+            start: 'left center',
+            end: 'right center',
+            scrub: 0.5,
+          }
+        });
+        
+        // Staggered text animations
+        tl.fromTo(elements, 
+          { 
+            y: 50, 
+            opacity: 0 
+          }, 
+          { 
+            y: 0, 
+            opacity: 1, 
+            stagger: 0.1, 
+            duration: 0.8,
+            ease: 'power2.out' 
+          }, 0);
+        
+        // Image and decorative elements animations
+        if (image) {
+          tl.fromTo(image, 
+            { 
+              scale: 0.8, 
+              opacity: 0, 
+              rotateY: index % 2 === 0 ? 15 : -15
+            }, 
+            { 
+              scale: 1, 
+              opacity: 1, 
+              rotateY: 0,
+              duration: 1.2,
+              ease: 'back.out(1.5)' 
+            }, 0.2);
+        }
+        
+        if (decorCircle) {
+          tl.fromTo(decorCircle, 
+            { 
+              scale: 0, 
+              opacity: 0 
+            }, 
+            { 
+              scale: 1, 
+              opacity: 1, 
+              duration: 1,
+              ease: 'elastic.out(1, 0.5)' 
+            }, 0.4);
+        }
+        
+        if (decorTag) {
+          tl.fromTo(decorTag, 
+            { 
+              x: index % 2 === 0 ? 50 : -50, 
+              opacity: 0, 
+              rotation: index % 2 === 0 ? 10 : -10 
+            }, 
+            { 
+              x: 0, 
+              opacity: 1, 
+              rotation: index === 0 ? 3 : index === 1 ? -3 : 2,
+              duration: 1,
+              ease: 'power2.out' 
+            }, 0.6);
+        }
+      });
+    }
+
+    // Initialize all animations
+    createBackgroundLines();
+    createBackgroundParticles();
+    setupScrollTrigger();
+    
+    // Add resize handler for responsive behavior
+    const handleResize = () => {
+      ScrollTrigger.refresh(true);
+      setupScrollTrigger();
     };
-  }); // Added activeSection as dependency
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Watch for active section changes
+    const activeWatcher = gsap.effects?.highlightActiveSection?.create();
+    
+    // Clean up on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      ScrollTrigger.getAll().forEach(st => st.kill());
+      if (linesContainerRef.current) {
+        linesContainerRef.current.innerHTML = '';
+      }
+      if (particlesContainerRef.current) {
+        particlesContainerRef.current.innerHTML = '';
+      }
+      if (activeWatcher) activeWatcher.kill();
+    };
+  }, []); // Added activeSection as dependency for section highlighting
 
   const sectionData = [
     {
@@ -192,11 +384,27 @@ const BuyPostEarn = () => {
       ref={containerRef}
       aria-labelledby="buy-post-earn-title"
     >
+      {/* Layered background elements for depth */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black opacity-80 z-0"
+        aria-hidden="true"
+      ></div>
+      
+      {/* Animated background particles */}
+      <div
+        className="absolute inset-0 overflow-hidden pointer-events-none z-0"
+        ref={particlesContainerRef}
+        aria-hidden="true"
+      ></div>
+      
+      {/* Animated background lines */}
       <div
         className="absolute inset-0 overflow-hidden pointer-events-none z-0"
         ref={linesContainerRef}
         aria-hidden="true"
       ></div>
+      
+      
 
       {/* Horizontal scrolling container */}
       <div ref={sectionsContainerRef} className="absolute inset-0">
@@ -205,31 +413,34 @@ const BuyPostEarn = () => {
             key={section.id}
             ref={section.ref}
             id={`${section.id}-section`}
-            className="section-panel flex items-center h-screen relative w-screen"
+            className="section-panel flex items-center h-screen relative w-screen will-change-transform"
             aria-labelledby={`${section.id}-heading`}
             tabIndex={0}
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-center">
               <div className={section.id === 'buy' ? 'order-2 md:order-1' : ''}>
                 <span
-                  className={`block text-sm font-medium text-${section.textColor} mb-2 animate-in uppercase tracking-widest`}
+                  className={`block text-sm font-medium text-${section.textColor} mb-2 animate-in uppercase tracking-widest will-change-transform`}
                 >
                   {section.step}
                 </span>
                 <h2
                   id={`${section.id}-heading`}
-                  className={`text-5xl md:text-6xl xl:text-7xl font-extrabold mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r ${section.titleColor} tracking-tight`}
+                  className={`text-5xl md:text-6xl xl:text-7xl font-extrabold mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r ${section.titleColor} tracking-tight will-change-transform`}
                 >
                   {section.title}
                 </h2>
-                <p className="text-xl text-gray-300 mb-8 animate-in leading-relaxed">
+                <p className="text-xl text-gray-300 mb-8 animate-in leading-relaxed will-change-transform">
                   {section.description}
                 </p>
                 <button
-                  className={`cta-button bg-gradient-to-r ${section.buttonColor} text-white px-8 py-4 rounded-full text-lg font-medium transition-all animate-in transform hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-${section.ringColor} focus:ring-offset-2 focus:ring-offset-black group`}
+                  className={`cta-button bg-gradient-to-r ${section.buttonColor} text-white px-8 py-4 rounded-full text-lg font-medium transition-all animate-in transform hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-${section.ringColor} focus:ring-offset-2 focus:ring-offset-black group will-change-transform overflow-hidden relative`}
                   aria-label={`Apply now and discover our partner brands`}
                 >
-                  <span className="flex items-center justify-center gap-2 transition-transform duration-300">
+                  {/* Button glow effect */}
+                  <span className="absolute inset-0 opacity-30 bg-white blur-xl transform scale-150 -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-in-out"></span>
+                  
+                  <span className="flex items-center justify-center gap-2 transition-transform duration-300 relative z-10">
                     {section.buttonText}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -257,12 +468,25 @@ const BuyPostEarn = () => {
                     : 'flex justify-center'
                 }
               >
-                <div className="relative animate-in w-full max-w-md">
-                  <img
-                    src={section.imageSrc}
-                    alt={section.imageAlt}
-                    className="rounded-2xl z-10 relative shadow-2xl hover:scale-105 transition-all duration-500 w-full h-auto object-cover aspect-[4/5]"
-                  />
+                <div className="relative animate-in w-full max-w-md perspective-1000">
+                  {/* Subtle glow behind image */}
+                  <div 
+                    className={`absolute inset-0 ${section.circleClass} opacity-20 blur-2xl rounded-full transform scale-150 z-0`}
+                    aria-hidden="true"
+                  ></div>
+                  
+                  {/* Hover effect wrapper */}
+                  <div className="relative group">
+                    <img
+                      src={section.imageSrc}
+                      alt={section.imageAlt}
+                      className="rounded-2xl z-10 relative shadow-2xl hover:scale-105 transition-all duration-500 w-full h-auto object-cover aspect-[4/5] will-change-transform"
+                    />
+                    
+                    {/* Image hover shine effect */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-tr from-white to-transparent blur-sm mix-blend-overlay transition-opacity duration-1000 rounded-2xl z-20"></div>
+                  </div>
+                  
                   <div
                     className={`decorative-circle absolute ${
                       section.id === 'buy'
@@ -272,7 +496,7 @@ const BuyPostEarn = () => {
                         : '-bottom-8 -right-8'
                     } w-28 h-28 ${
                       section.circleClass
-                    } rounded-full z-0 blur-sm`}
+                    } rounded-full z-0 blur-sm will-change-transform`}
                   ></div>
                   <div
                     className={`decorative-tag absolute ${
@@ -291,10 +515,12 @@ const BuyPostEarn = () => {
                       section.id === 'earn'
                         ? 'bg-gradient-to-r from-pink-400 to-purple-500'
                         : ''
-                    }`}
+                    } will-change-transform backdrop-blur-sm`}
                     style={section.id === 'earn' ? { color: 'white' } : {}}
                   >
-                    {section.tagContent}
+                    <div className="flex items-center justify-center font-bold text-lg">
+                      {section.tagContent}
+                    </div>
                   </div>
                 </div>
               </div>
