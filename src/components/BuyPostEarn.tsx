@@ -121,13 +121,13 @@ const BuyPostEarn = () => {
         anticipatePin: 1,
         animation: gsap.to(sectionsContainerRef.current, {
           x: () => `-${(sections.length - 1) * 100}vw`, // Adjusted for smoothness
-          ease: 'power3.inOut', // Smoother easing function
+          ease: 'power1.inOut', // Smoother easing function
           duration: sections.length * 1, // Adjusted duration for smoothness
         }),
         snap: {
           snapTo: 1 / (sections.length - 1), // Smooth snapping between sections
-          duration: { min: 0.2, max: 0.3 }, // Snapping duration
-          ease: 'power3.inOut', // Smooth snapping easing
+          duration: { min: 0.2, max: 0.8 }, // Snapping duration
+          ease: 'power1.inOut', // Smooth snapping easing
         },
       });
 
