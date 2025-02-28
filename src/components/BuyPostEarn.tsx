@@ -90,10 +90,10 @@ const BuyPostEarn = () => {
     // Set up the horizontal scroll and section transitions
     const setupScrollTrigger = () => {
       const sections = document.querySelectorAll('.section-panel');
-    
+
       // Clean previous instances to prevent memory leaks
       ScrollTrigger.getAll().forEach((st) => st.kill());
-    
+
       // Set up the horizontal scroll container
       if (sectionsContainerRef.current) {
         gsap.set(sectionsContainerRef.current, {
@@ -102,13 +102,13 @@ const BuyPostEarn = () => {
           flexDirection: 'row',
         });
       }
-    
+
       // Set each section to take up 100vw width
       gsap.set(sections, { width: '100vw' });
-    
+
       // Main scroll animation with smooth behavior
       const scrubValue = window.innerWidth > 768 ? 0.8 : 1.2; // Responsive scrub value
-    
+
       // Create the horizontal scroll trigger with smooth snapping
       ScrollTrigger.create({
         id: 'mainScroll',
@@ -122,22 +122,22 @@ const BuyPostEarn = () => {
         animation: gsap.to(sectionsContainerRef.current, {
           x: () => `-${(sections.length - 1) * 100}vw`, // Adjusted for smoothness
           ease: 'power3.inOut', // Smoother easing function
-          duration: sections.length * 2, // Adjusted duration for smoothness
+          duration: sections.length * 1, // Adjusted duration for smoothness
         }),
         snap: {
           snapTo: 1 / (sections.length - 1), // Smooth snapping between sections
-          duration: { min: 0.2, max: 0.8 }, // Snapping duration
+          duration: { min: 0.2, max: 0.3 }, // Snapping duration
           ease: 'power3.inOut', // Smooth snapping easing
         },
       });
-    
+
       // Set up section-specific animations
       sections.forEach((section, index) => {
         const elements = section.querySelectorAll('.animate-in');
         const image = section.querySelector('img');
         const decorCircle = section.querySelector('.decorative-circle');
         const decorTag = section.querySelector('.decorative-tag');
-    
+
         // Create a timeline for each section
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -148,7 +148,7 @@ const BuyPostEarn = () => {
             scrub: 0.5,
           },
         });
-    
+
         // Staggered text animations
         tl.fromTo(
           elements,
@@ -165,7 +165,7 @@ const BuyPostEarn = () => {
           },
           0
         );
-    
+
         // Image and decorative elements animations
         if (image) {
           tl.fromTo(
@@ -185,7 +185,7 @@ const BuyPostEarn = () => {
             0.2
           );
         }
-    
+
         if (decorCircle) {
           tl.fromTo(
             decorCircle,
@@ -202,7 +202,7 @@ const BuyPostEarn = () => {
             0.4
           );
         }
-    
+
         if (decorTag) {
           tl.fromTo(
             decorTag,
@@ -223,6 +223,7 @@ const BuyPostEarn = () => {
         }
       });
     };
+
     // Initialize all animations
     createBackgroundParticles();
     setupScrollTrigger();
@@ -235,24 +236,18 @@ const BuyPostEarn = () => {
 
     window.addEventListener('resize', handleResize);
 
-    // Watch for active section changes
-    const activeWatcher = gsap.effects?.highlightActiveSection?.create();
-
     // Clean up on component unmount
     return () => {
       window.removeEventListener('resize', handleResize);
       ScrollTrigger.getAll().forEach((st) => st.kill());
       if (linesContainerRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         linesContainerRef.current.innerHTML = '';
       }
       if (particlesContainerRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         particlesContainerRef.current.innerHTML = '';
       }
-      if (activeWatcher) activeWatcher.kill();
     };
-  }, []); // Added activeSection as dependency for section highlighting
+  }, []);
 
   const sectionData = [
     {
@@ -389,7 +384,11 @@ const BuyPostEarn = () => {
             tabIndex={0}
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-center">
-              <div className={section.id === 'buy' ? 'order-2 md:order-1' : ''}>
+              <div
+                className={`${
+                  section.id === 'buy' ? 'order-2 md:order-1' : ''
+                } text-center md:text-left`}
+              >
                 <span
                   className={`block text-sm font-medium text-${section.textColor} mb-2 animate-in uppercase tracking-widest will-change-transform`}
                 >
@@ -397,15 +396,15 @@ const BuyPostEarn = () => {
                 </span>
                 <h2
                   id={`${section.id}-heading`}
-                  className={`text-5xl md:text-6xl xl:text-7xl font-extrabold mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r ${section.titleColor} tracking-tight will-change-transform`}
+                  className={`text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r ${section.titleColor} tracking-tight will-change-transform`}
                 >
                   {section.title}
                 </h2>
-                <p className="text-xl text-gray-300 mb-8 animate-in leading-relaxed will-change-transform">
+                <p className="text-lg sm:text-xl text-gray-300 mb-8 animate-in leading-relaxed will-change-transform">
                   {section.description}
                 </p>
                 <button
-                  className={`cta-button bg-gradient-to-r ${section.buttonColor} text-white px-8 py-4 rounded-full text-lg font-medium transition-all animate-in transform hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-${section.ringColor} focus:ring-offset-2 focus:ring-offset-black group will-change-transform overflow-hidden relative`}
+                  className={`cta-button bg-gradient-to-r ${section.buttonColor} text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg font-medium transition-all animate-in transform hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-${section.ringColor} focus:ring-offset-2 focus:ring-offset-black group will-change-transform overflow-hidden relative`}
                   aria-label={`Apply now and discover our partner brands`}
                 >
                   {/* Button glow effect */}
@@ -465,7 +464,7 @@ const BuyPostEarn = () => {
                         : section.id === 'post'
                         ? '-top-8 -right-8'
                         : '-bottom-8 -right-8'
-                    } w-28 h-28 ${
+                    } w-20 h-20 sm:w-28 sm:h-28 ${
                       section.circleClass
                     } rounded-full z-0 blur-sm will-change-transform`}
                   ></div>
@@ -476,7 +475,7 @@ const BuyPostEarn = () => {
                         : section.id === 'post'
                         ? '-bottom-6 -left-10'
                         : 'top-10 -left-10'
-                    } w-36 h-20 bg-white rounded-xl flex items-center justify-center transform ${
+                    } w-24 h-14 sm:w-36 sm:h-20 bg-white rounded-xl flex items-center justify-center transform ${
                       section.id === 'post'
                         ? '-rotate-3 text-black'
                         : section.id === 'earn'
@@ -489,7 +488,7 @@ const BuyPostEarn = () => {
                     } will-change-transform backdrop-blur-sm`}
                     style={section.id === 'earn' ? { color: 'white' } : {}}
                   >
-                    <div className="flex items-center justify-center font-bold text-lg">
+                    <div className="flex items-center justify-center font-bold text-sm sm:text-lg">
                       {section.tagContent}
                     </div>
                   </div>
