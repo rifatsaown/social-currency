@@ -1,4 +1,6 @@
 import BuyPostEarn from './components/BuyPostEarn';
+import Features from './components/Features';
+import Footer from './components/Footer';
 import Hero from './components/Hero';
 import Navbar from './components/Navbar';
 
@@ -8,6 +10,8 @@ const App = () => {
       <Navbar />
       <Hero />
       <BuyPostEarn />
+      <Features />
+      <Footer/>
     </div>
   );
 };
