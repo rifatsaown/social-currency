@@ -349,7 +349,7 @@ const BuyPostEarn = () => {
             </span>
             <h2
               id="buy-heading"
-              className="text-5xl md:text-6xl xl:text-7xl font-extrabold text-white mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-indigo-400 tracking-tight"
+              className="text-5xl md:text-6xl xl:text-7xl font-extrabold mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-indigo-400 tracking-tight"
             >
               BUY
             </h2>
@@ -391,7 +391,7 @@ const BuyPostEarn = () => {
                 className="rounded-2xl z-10 relative shadow-2xl hover:scale-105 transition-all duration-500 w-full h-auto object-cover aspect-[4/5]"
               />
               <div className="decorative-circle absolute -top-6 -left-6 w-28 h-28 bg-gradient-to-tr from-yellow-400 to-orange-300 rounded-full z-0 blur-sm"></div>
-              <div className="decorative-tag absolute bottom-12 -right-10 w-36 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl z-0 flex items-center justify-center transform rotate-3 shadow-lg z-[10]">
+              <div className="decorative-tag absolute bottom-12 -right-10 w-36 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl flex items-center justify-center transform rotate-3 shadow-lg z-[10]">
                 <span className="text-white text-3xl font-bold">$</span>
               </div>
             </div>
@@ -414,7 +414,7 @@ const BuyPostEarn = () => {
                 className="rounded-2xl z-10 relative shadow-2xl hover:scale-105 transition-all duration-500 w-full h-auto object-cover aspect-[4/5]"
               />
               <div className="decorative-circle absolute -top-8 -right-8 w-28 h-28 bg-gradient-to-bl from-green-400 to-teal-500 rounded-full z-0 blur-sm"></div>
-              <div className="decorative-tag absolute -bottom-6 -left-10 w-36 h-20 bg-white rounded-xl z-0 flex items-center justify-center transform -rotate-3 shadow-lg z-[10]">
+              <div className="decorative-tag absolute -bottom-6 -left-10 w-36 h-20 bg-white rounded-xl flex items-center justify-center transform -rotate-3 shadow-lg z-[10]">
                 <span className="text-gray-900 text-xl font-bold flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -443,7 +443,7 @@ const BuyPostEarn = () => {
             </span>
             <h2
               id="post-heading"
-              className="text-5xl md:text-6xl xl:text-7xl font-extrabold text-white mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-500 tracking-tight"
+              className="text-5xl md:text-6xl xl:text-7xl font-extrabold mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-500 tracking-tight"
             >
               POST
             </h2>
@@ -493,7 +493,7 @@ const BuyPostEarn = () => {
             </span>
             <h2
               id="earn-heading"
-              className="text-5xl md:text-6xl xl:text-7xl font-extrabold text-white mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500 tracking-tight"
+              className="text-5xl md:text-6xl xl:text-7xl font-extrabold  mb-6 section-title animate-in bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500 tracking-tight"
             >
               EARN
             </h2>
@@ -535,7 +535,7 @@ const BuyPostEarn = () => {
                 className="rounded-2xl z-10 relative shadow-2xl hover:scale-105 transition-all duration-500 w-full h-auto object-cover aspect-[4/5]"
               />
               <div className="decorative-circle absolute -bottom-8 -right-8 w-28 h-28 bg-gradient-to-bl from-purple-600 to-pink-500 rounded-full z-0 blur-sm"></div>
-              <div className="decorative-tag absolute top-10 -left-10 w-36 h-20 bg-gradient-to-r from-pink-400 to-purple-500 rounded-xl z-0 flex items-center justify-center transform rotate-2 shadow-lg z-[10]">
+              <div className="decorative-tag absolute top-10 -left-10 w-36 h-20 bg-gradient-to-r from-pink-400 to-purple-500 rounded-xl flex items-center justify-center transform rotate-2 shadow-lg z-[10]">
                 <span className="text-white text-xl font-bold flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
