@@ -49,7 +49,8 @@ const Features = () => {
       for (let i = 0; i < lineCount; i++) {
         const isHorizontal = Math.random() > 0.5;
         const line = document.createElement('div');
-        line.className = 'absolute bg-gradient-to-r from-transparent via-purple-500/20 to-transparent';
+        line.className =
+          'absolute bg-gradient-to-r from-transparent via-purple-500/20 to-transparent';
 
         if (isHorizontal) {
           line.style.height = '1px';
@@ -80,18 +81,35 @@ const Features = () => {
     };
 
     const initAnimations = () => {
-      gsap.set([headingRef.current, subHeadingRef.current, descriptionRef.current], {
-        opacity: 0,
-        y: 30,
-      });
+      gsap.set(
+        [headingRef.current, subHeadingRef.current, descriptionRef.current],
+        {
+          opacity: 0,
+          y: 30,
+        }
+      );
       featureRefs.current.forEach((card) => {
         gsap.set(card, { opacity: 0, y: 60, scale: 0.9 });
       });
 
-      gsap.timeline()
-        .to(headingRef.current, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' })
-        .to(subHeadingRef.current, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.4')
-        .to(descriptionRef.current, { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, '-=0.4');
+      gsap
+        .timeline()
+        .to(headingRef.current, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+        })
+        .to(
+          subHeadingRef.current,
+          { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+          '-=0.4'
+        )
+        .to(
+          descriptionRef.current,
+          { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' },
+          '-=0.4'
+        );
 
       gsap.to(featureRefs.current, {
         y: 0,
@@ -117,24 +135,41 @@ const Features = () => {
 
   return (
     <div ref={sectionRef} className="py-24 bg-black relative overflow-hidden">
-      <div ref={gridLinesRef} className="absolute inset-0 opacity-30 pointer-events-none" />
+      <div
+        ref={gridLinesRef}
+        className="absolute inset-0 opacity-30 pointer-events-none"
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="lg:text-center">
-          <h2 ref={headingRef} className="text-base text-purple-400 font-semibold tracking-wide uppercase">
+          <h2
+            ref={headingRef}
+            className="text-base text-purple-400 font-semibold tracking-wide uppercase"
+          >
             Why Choose INFLUZIO
           </h2>
-          <p ref={subHeadingRef} className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl text-white">
+          <p
+            ref={subHeadingRef}
+            className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl text-white"
+          >
             The Future of Social Banking
           </p>
-          <p ref={descriptionRef} className="mt-4 max-w-2xl text-xl text-gray-300 lg:mx-auto">
-            INFLUZIO combines financial services with social media influence, creating a revolutionary new way to bank.
+          <p
+            ref={descriptionRef}
+            className="mt-4 max-w-2xl text-xl text-gray-300 lg:mx-auto"
+          >
+            INFLUZIO combines financial services with social media influence,
+            creating a revolutionary new way to bank.
           </p>
         </div>
 
         <div className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
-            <div key={feature.name} ref={addToRefs} className="group transform transition-all duration-300 hover:scale-105">
+            <div
+              key={feature.name}
+              ref={addToRefs}
+              className="group transform transition-all duration-300 hover:scale-105"
+            >
               <div className="relative bg-blue-950 rounded-lg px-6 pb-8 h-full backdrop-blur-sm border border-blue-900/30 shadow-lg hover:shadow-xl">
                 <div className="absolute -inset-px bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="-mt-6 relative flex items-center justify-center">
