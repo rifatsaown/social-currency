@@ -15,11 +15,11 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
     }
   
     render() {
-      if (this.state.hasError) {
-        // // force a reload of the page
-        window.location.reload();
-        // return <div>Something went wrong. Please refresh the page.</div>;
-      }
+      // if (this.state.hasError) {
+      //   // // force a reload of the page
+      //   // window.location.reload();
+      //   // return <div>Something went wrong. Please refresh the page.</div>;
+      // }
       return this.props.children;
     }
   }
