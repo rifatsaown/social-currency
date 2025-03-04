@@ -3,6 +3,7 @@ import Features from './components/Features';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import Navbar from './components/Navbar';
+import GetStart from './components/GetStart/GetStart';
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <BuyPostEarn />
       <Features />
       <Footer/>
+      <GetStart/>
     </div>
   );
 };
