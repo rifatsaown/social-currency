@@ -16,7 +16,7 @@ const Hero = () => {
   const blob1Ref = useRef<HTMLDivElement>(null);
   const blob2Ref = useRef<HTMLDivElement>(null);
 
-  const logoRef = useRef<HTMLImageElement>(null); // Ref for the logo
+  // const logoRef = useRef<HTMLImageElement>(null); // Ref for the logo
 
   useEffect(() => {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -44,10 +44,17 @@ const Hero = () => {
       { opacity: 0, y: 15, scale: 0.98 } // Adjusted y and scale
     );
 
-    gsap.set([blob1Ref.current, blob2Ref.current, logoRef.current], {
-      opacity: 0,
-      scale: 0.05,
-    }); // Smaller initial scale
+    gsap.set(
+      [
+        blob1Ref.current,
+        blob2Ref.current,
+        // logoRef.current
+      ],
+      {
+        opacity: 0,
+        scale: 0.05,
+      }
+    ); // Smaller initial scale
 
     // Animate elements in sequence (faster durations and offsets)
     tl.fromTo(
@@ -91,12 +98,12 @@ const Hero = () => {
       { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power4.out' }, // Slightly longer duration for the image
       '-=0.2'
     );
-    tl.fromTo(
-      logoRef.current,
-      { opacity: 0, scale: 0.05 },
-      { opacity: 1, scale: 1, duration: 0.5, ease: 'power4.out' },
-      '-=0.2'
-    );
+    // tl.fromTo(
+    //   logoRef.current,
+    //   { opacity: 0, scale: 0.05 },
+    //   { opacity: 1, scale: 1, duration: 0.5, ease: 'power4.out' },
+    //   '-=0.2'
+    // );
     tl.fromTo(
       blob1Ref.current,
       { opacity: 0, scale: 0.05, x: '-=50', y: '-=50' }, // Adjusted initial position
@@ -180,7 +187,7 @@ const Hero = () => {
       </div>
 
       {/* Logo in the top right corner */}
-      <div className="absolute top-4 left-4 z-20">
+      {/* <div className="absolute top-4 left-4 z-20">
         <div className="flex items-center space-x-2">
           <img
             src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5ZjFlZWMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib3giPjxwYXRoIGQ9Ik0yMSA4YTIgMiAwIDAgMC0xLTEuNzNsLTctNGEyIDIgMCAwIDAtMiAwbC03IDRBMiAyIDAgMCAwIDMgOHY4YTIgMiAwIDAgMCAxIDEuNzNsNyA0YTIgMiAwIDAgMCAyIDBsNy00QTIgMiAwIDAgMCAyMSAxNloiLz48cGF0aCBkPSJtMy4zIDcgOC43IDUgOC43LTUiLz48cGF0aCBkPSJNMTIgMjJWMTIiLz48L3N2Zz4="
@@ -190,7 +197,7 @@ const Hero = () => {
           />
           <h2 className="font-bold text-2xl">INFLUZIO</h2>
         </div>
-      </div>
+      </div> */}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-16 md:py-24">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
