@@ -246,7 +246,7 @@ const Navbar = () => {
         <div className="w-full max-w-md px-6 flex flex-col items-center">
           {['Home', 'Features', 'cards', 'About', 'Contact'].map((item, index) => (
             <a
-              key={item}
+              key={index}
               ref={(el) => {
                 menuItemsRef.current[index] = el;
               }}
