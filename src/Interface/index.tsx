@@ -8,3 +8,8 @@ export interface ParallaxEvent {
   clientX: number;
   clientY: number;
 }
+
+export interface FormField {
+  name: string;
+  value: string;
+}
