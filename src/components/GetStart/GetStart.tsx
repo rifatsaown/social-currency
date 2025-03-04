@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import gsap from 'gsap';
+// import gsap from 'gsap';
 import {
   ArrowRight,
   CheckCircle,
@@ -9,7 +9,8 @@ import {
   Phone,
   User,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
+import { FormField } from '../../Interface';
 
 function GetStart() {
   // Form state
@@ -29,10 +30,7 @@ function GetStart() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Handle input change
-  interface FormField {
-    name: string;
-    value: string;
-  }
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value }: FormField = e.target;
@@ -78,21 +76,21 @@ function GetStart() {
   };
 
   // Animated background elements
-  useEffect(() => {
-    const particles = document.querySelectorAll('.bg-particle');
-    particles.forEach((particle) => {
-      gsap.to(particle, {
-        x: `random(-100, 100)`,
-        y: `random(-100, 100)`,
-        rotation: `random(-180, 180)`,
-        opacity: `random(0.1, 0.3)`,
-        duration: `random(15, 30)`,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
-    });
-  }, []);
+  // useEffect(() => {
+  //   const particles = document.querySelectorAll('.bg-particle');
+  //   particles.forEach((particle) => {
+  //     gsap.to(particle, {
+  //       x: `random(-100, 100)`,
+  //       y: `random(-100, 100)`,
+  //       rotation: `random(-180, 180)`,
+  //       opacity: `random(0.1, 0.3)`,
+  //       duration: `random(15, 30)`,
+  //       repeat: -1,
+  //       yoyo: true,
+  //       ease: 'sine.inOut',
+  //     });
+  //   });
+  // }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-black text-white overflow-hidden relative py-8">
@@ -735,7 +733,7 @@ function GetStart() {
         </motion.div>
       </div>
 
-      {/* Help button */}
+{/* 
       <motion.div
         className="fixed bottom-6 right-6"
         initial={{ opacity: 0, scale: 0.8 }}
@@ -776,7 +774,7 @@ function GetStart() {
             />
           </svg>
         </button>
-      </motion.div>
+      </motion.div> */}
     </div>
   );
 }
