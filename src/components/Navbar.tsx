@@ -15,9 +15,12 @@ const Navbar = () => {
   const lineRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef(null);
   const iconRef = useRef(null);
+  const logoRef = useRef<HTMLImageElement>(null); // Ref for the logo
 
   // Initialize menu position on first render
   useEffect(() => {
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
     gsap.set(menuRef.current, { x: '-100%', opacity: 0 });
     gsap.set(overlayRef.current, { opacity: 0 });
     gsap.set(menuItemsRef.current, { opacity: 0, y: 20 });
@@ -26,6 +29,19 @@ const Navbar = () => {
       scaleY: 0,
       transformOrigin: 'left top',
     });
+    gsap.set(logoRef.current, {
+      opacity: 0,
+      scale: 0.05,
+    });
+
+    tl.fromTo(
+      logoRef.current,
+      { opacity: 0, scale: 0.05 },
+      { opacity: 1, scale: 1, duration: 0.5, ease: 'power4.out' },
+      '-=0.2'
+    );
+
+
     setIsInitialized(true);
   }, []);
 
@@ -175,6 +191,17 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 right-0 z-50 w-full">
+      <div className="absolute top-4 left-4 z-20">
+        <div className="flex items-center space-x-2">
+          <img
+            src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5ZjFlZWMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib3giPjxwYXRoIGQ9Ik0yMSA4YTIgMiAwIDAgMC0xLTEuNzNsLTctNGEyIDIgMCAwIDAtMiAwbC03IDRBMiAyIDAgMCAwIDMgOHY4YTIgMiAwIDAgMCAxIDEuNzNsNyA0YTIgMiAwIDAgMCAyIDBsNy00QTIgMiAwIDAgMCAyMSAxNloiLz48cGF0aCBkPSJtMy4zIDcgOC43IDUgOC43LTUiLz48cGF0aCBkPSJNMTIgMjJWMTIiLz48L3N2Zz4="
+            alt="Company Logo"
+            className="h-12 w-auto" // Adjust size as needed
+            ref={logoRef}
+          />
+          <h2 className="font-bold text-2xl">INFLUZIO</h2>
+        </div>
+      </div>
       {/* Hamburger button */}
       <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
         <button
