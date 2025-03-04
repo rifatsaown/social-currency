@@ -374,9 +374,9 @@ const BuyPostEarn = () => {
 
       {/* Horizontal scrolling container */}
       <div ref={sectionsContainerRef} className="absolute inset-0">
-        {sectionData.map((section) => (
+        {sectionData.map((section, i) => (
           <div
-            key={section.id}
+            key={i}
             ref={section.ref}
             id={`${section.id}-section`}
             className="section-panel flex items-center h-screen relative w-screen will-change-transform"
