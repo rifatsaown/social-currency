@@ -164,9 +164,9 @@ const Features = () => {
         </div>
 
         <div className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature) => (
+          {features.map((feature, i) => (
             <div
-              key={feature.name}
+              key={i}
               ref={addToRefs}
               className="group transform transition-all duration-300 hover:scale-105"
             >
