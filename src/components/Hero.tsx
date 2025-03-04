@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 // Define the interface for the parallax event
 interface ParallaxEvent extends MouseEvent {
@@ -221,9 +222,9 @@ const Hero = () => {
               className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0"
               ref={buttonRef}
             >
-              <button className="inline-flex items-center px-8 py-4 border border-transparent text-base font-bold rounded-full shadow-md text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all uppercase focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-1">
+              <Link to='/apply-now' className="inline-flex items-center px-8 py-4 border border-transparent text-base font-bold rounded-full shadow-md text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all uppercase focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-1">
                 Apply Now
-              </button>
+              </Link>
             </div>
           </div>
           <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center justify-center">
