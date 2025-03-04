@@ -119,16 +119,16 @@ const Footer = () => {
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-purple-400 mr-2 mt-0.5" />
                 <span className="text-gray-400">
-                  123 Fintech Street, Mumbai, India 400001
+                  123 Fintech Street, Dhaka, Bangladesh
                 </span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 text-purple-400 mr-2" />
-                <span className="text-gray-400">+91 (555) 123-4567</span>
+                <span className="text-gray-400">+88 (016) 123-4567</span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-purple-400 mr-2" />
-                <span className="text-gray-400">info@INFLUZIO.in</span>
+                <span className="text-gray-400">rifatsaown0@gmail.com</span>
               </li>
             </ul>
           </div>
