@@ -22,7 +22,7 @@ const BuyPostEarn = () => {
       if (!particlesContainer) return;
 
       particlesContainer.innerHTML = '';
-      const particleCount = 125; // Reduced count for performance
+      const particleCount = 50; // Reduced count for performance
       const fragment = document.createDocumentFragment();
 
       for (let i = 0; i < particleCount; i++) {
