@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { Menu, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import CustomButton from './Button/CustomButton';
 
 const Navbar = () => {
@@ -15,7 +16,8 @@ const Navbar = () => {
   const lineRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef(null);
   const iconRef = useRef(null);
-  const logoRef = useRef<HTMLImageElement>(null); // Ref for the logo
+  const logoRef = useRef<HTMLImageElement>(null);
+  const location = useLocation();
 
   // Initialize menu position on first render
   useEffect(() => {
@@ -41,7 +43,6 @@ const Navbar = () => {
       '-=0.2'
     );
 
-
     setIsInitialized(true);
   }, []);
 
@@ -53,12 +54,12 @@ const Navbar = () => {
     // Button animation - faster and smoother
     gsap.to(buttonRef.current, {
       scale: 0.9,
-      duration: 0.15, // Faster button scale
+      duration: 0.15,
       ease: 'power3.easeInOut',
       onComplete: () => {
         gsap.to(buttonRef.current, {
           scale: 1,
-          duration: 0.25, // Faster button scale return
+          duration: 0.25,
           ease: 'power3.easeInOut',
         });
       },
@@ -67,7 +68,7 @@ const Navbar = () => {
     // Icon rotation - faster and smoother
     gsap.to(iconRef.current, {
       rotation: isMenuOpen ? 180 : 0,
-      duration: 0.3, // Faster icon rotation
+      duration: 0.3,
       ease: 'power3.easeInOut',
     });
 
@@ -78,7 +79,7 @@ const Navbar = () => {
         scaleY: 1,
         width: '150vw',
         height: '150vh',
-        duration: 0.45, // Faster line animation
+        duration: 0.45,
         ease: 'power3.easeInOut',
         onComplete: () => {
           // Overlay animation - faster and smoother
@@ -93,7 +94,7 @@ const Navbar = () => {
               backgroundColor: 'rgba(0, 0, 0, 0.8)',
               opacity: 1,
               backdropFilter: 'blur(8px)',
-              duration: 0.4, // Faster overlay
+              duration: 0.4,
               ease: 'power3.easeInOut',
             }
           );
@@ -106,7 +107,7 @@ const Navbar = () => {
               x: '0%',
               opacity: 1,
               skewX: '0deg',
-              duration: 0.45, // Faster menu reveal
+              duration: 0.45,
               ease: 'expo.easeInOut',
             }
           );
@@ -119,9 +120,9 @@ const Navbar = () => {
               opacity: 1,
               y: 0,
               scale: 1,
-              stagger: 0.07, // Slightly faster stagger
-              delay: 0.15, // Reduced delay
-              duration: 0.35, // Faster menu items
+              stagger: 0.07,
+              delay: 0.15,
+              duration: 0.35,
               ease: 'power3.easeInOut',
             }
           );
@@ -134,8 +135,8 @@ const Navbar = () => {
               opacity: 1,
               y: 0,
               scale: 1,
-              delay: 0.25, // Reduced delay
-              duration: 0.35, // Faster button animation
+              delay: 0.25,
+              duration: 0.35,
               ease: 'power3.easeInOut',
               onComplete: () => setIsAnimating(false),
             }
@@ -148,7 +149,7 @@ const Navbar = () => {
         x: '-100%',
         opacity: 0,
         skewX: '-2deg',
-        duration: 0.35, // Faster menu exit
+        duration: 0.35,
         ease: 'power3.easeInOut',
       });
 
@@ -156,8 +157,8 @@ const Navbar = () => {
       gsap.to(menuItemsRef.current, {
         opacity: 0,
         y: -10,
-        stagger: 0.04, // Slightly faster stagger
-        duration: 0.25, // Faster item fade
+        stagger: 0.04,
+        duration: 0.25,
         ease: 'power2.easeInOut',
       });
 
@@ -165,7 +166,7 @@ const Navbar = () => {
       gsap.to(overlayRef.current, {
         opacity: 0,
         backdropFilter: 'blur(0px)',
-        duration: 0.35, // Faster overlay fade
+        duration: 0.35,
         ease: 'power3.easeInOut',
       });
 
@@ -175,7 +176,7 @@ const Navbar = () => {
         scaleY: 0,
         width: '100%',
         height: '100%',
-        duration: 0.35, // Faster line animation
+        duration: 0.35,
         ease: 'power3.easeInOut',
         onComplete: () => setIsAnimating(false),
       });
@@ -189,19 +190,25 @@ const Navbar = () => {
     }
   };
 
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location]);
+
   return (
     <nav className="fixed top-0 right-0 z-50 w-full">
       <div className="absolute top-4 left-4 z-20">
-        <div className="flex items-center space-x-2">
+        <Link to="/" className="flex items-center space-x-2">
           <img
             src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5ZjFlZWMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib3giPjxwYXRoIGQ9Ik0yMSA4YTIgMiAwIDAgMC0xLTEuNzNsLTctNGEyIDIgMCAwIDAtMiAwbC03IDRBMiAyIDAgMCAwIDMgOHY4YTIgMiAwIDAgMCAxIDEuNzNsNyA0YTIgMiAwIDAgMCAyIDBsNy00QTIgMiAwIDAgMCAyMSAxNloiLz48cGF0aCBkPSJtMy4zIDcgOC43IDUgOC43LTUiLz48cGF0aCBkPSJNMTIgMjJWMTIiLz48L3N2Zz4="
             alt="Company Logo"
-            className="h-12 w-auto" // Adjust size as needed
+            className="h-12 w-auto"
             ref={logoRef}
           />
           <h2 className="font-bold text-2xl">INFLUZIO</h2>
-        </div>
+        </Link>
       </div>
+
       {/* Hamburger button */}
       <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50">
         <button
@@ -244,32 +251,40 @@ const Navbar = () => {
         style={{ display: isInitialized ? 'flex' : 'none' }}
       >
         <div className="w-full max-w-md px-6 flex flex-col items-center">
-          {['Home', 'Features', 'cards', 'About', 'Contact'].map((item, index) => (
-            <a
+          {[
+            { name: 'Home', path: '/' },
+            { name: 'Features', path: '/#features' },
+            { name: 'Cards', path: '/#cards' },
+            { name: 'About', path: '/about' },
+            { name: 'Contact', path: '/#contact' },
+          ].map((item, index) => (
+            <Link
               key={index}
+              to={item.path}
               ref={(el) => {
                 menuItemsRef.current[index] = el;
               }}
-              href="#"
               className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light py-3 my-1
               hover:text-transparent bg-clip-text bg-gradient-to-r hover:from-purple-400 hover:to-pink-400
               transition-colors duration-300 relative group w-full text-center"
             >
-              {item.toUpperCase()}
+              {item.name.toUpperCase()}
               <span
                 className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5
                 bg-gradient-to-r from-purple-500 to-pink-500
                 group-hover:w-3/4 transition-all duration-300 ease-out"
               ></span>
-            </a>
+            </Link>
           ))}
           <div className="mt-4 sm:mt-6">
-            <CustomButton
-              ref={(el) => {
-                menuItemsRef.current[4] = el;
-              }}
-              buttonText="Get Started"
-            />
+            <Link to="/apply-now">
+              <CustomButton
+                ref={(el) => {
+                  menuItemsRef.current[4] = el;
+                }}
+                buttonText="Get Started"
+              />
+            </Link>
           </div>
         </div>
       </div>
