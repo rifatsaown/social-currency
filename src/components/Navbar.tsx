@@ -253,10 +253,12 @@ const Navbar = () => {
         <div className="w-full max-w-md px-6 flex flex-col items-center">
           {[
             { name: 'Home', path: '/' },
-            { name: 'Features', path: '/#features' },
-            { name: 'Cards', path: '/#cards' },
             { name: 'About', path: '/about' },
-            { name: 'Contact', path: '/#contact' },
+            { name: 'Privacy Policy', path: '/privacy' },
+            { name: 'Terms & Conditions', path: '/terms' },
+            // { name: 'Features', path: '/#features' },
+            // { name: 'Cards', path: '/#cards' },
+            // { name: 'Contact', path: '/#contact' },
           ].map((item, index) => (
             <Link
               key={index}

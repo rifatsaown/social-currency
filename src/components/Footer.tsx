@@ -297,13 +297,13 @@ const Footer = () => {
           </p>
           <div className="mt-4 flex justify-center space-x-6">
             {[
-              'Privacy Policy',
-              'Terms of Service',
-              'Card Agreement',
-              'Refund Policy',
-            ].map((text, index) => (
-              <FooterLink key={index} href="#" variants={linkVariants}>
-                {text}
+              { text: 'Privacy Policy', href: '/privacy' },
+              { text: 'Terms of Service', href: '#' },
+              { text: 'Card Agreement', href: '#' },
+              { text: 'Refund Policy', href: '#' },
+            ].map((item, index) => (
+              <FooterLink key={index} href={item.href} variants={linkVariants}>
+                {item.text}
               </FooterLink>
             ))}
           </div>

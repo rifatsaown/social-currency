@@ -164,7 +164,7 @@ const WhyInfluzio = () => {
           </h2>
           <p
             ref={subHeadingRef}
-            className="mt-2 text-3xl font-extrabold tracking-tight sm:text-5xl text-white bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-white"
+            className="mt-2 text-3xl font-extrabold tracking-tight sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-white"
           >
             Influence is for everyone!
           </p>
