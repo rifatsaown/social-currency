@@ -2,9 +2,17 @@ import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../MainLayout';
 import GetStart from '../components/GetStart/GetStart';
 import Home from '../components/Home/Home';
+import ProtectedRoute from '../components/ProtectedRoute';
+import { AuthProvider } from '../context/AuthContext';
 import AboutPage from '../pages/About';
+import Deactivated from '../pages/Deactivated';
+import Login from '../pages/Login';
 import Privacy from '../pages/Privacy';
 import Terms from '../pages/Terms';
+import Unauthorized from '../pages/Unauthorized';
+import Dashboard from '../pages/admin/Dashboard';
+import Invitations from '../pages/admin/Invitations';
+import Participants from '../pages/admin/Participants';
 import ErrorBoundary from './ErrorBoundary';
 
 const router = createBrowserRouter([
@@ -12,7 +20,9 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <ErrorBoundary>
-        <MainLayout />
+        <AuthProvider>
+          <MainLayout />
+        </AuthProvider>
       </ErrorBoundary>
     ),
     children: [
@@ -37,6 +47,72 @@ const router = createBrowserRouter([
         element: <Terms />,
       },
     ],
+  },
+  {
+    path: '/login',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <Login />
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/admin/dashboard',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute requireAdmin>
+            <Dashboard />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/admin/participants',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute requireAdmin>
+            <Participants />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/admin/invitations',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute requireAdmin>
+            <Invitations />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/unauthorized',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <Unauthorized />
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/deactivated',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <Deactivated />
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
   },
 ]);
 
