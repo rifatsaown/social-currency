@@ -13,3 +13,9 @@ export interface FormField {
   name: string;
   value: string;
 }
+
+export interface Stats {
+  totalParticipants: number;
+  activeParticipants: number;
+  inactiveParticipants: number;
+}

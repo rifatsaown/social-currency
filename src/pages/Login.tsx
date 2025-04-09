@@ -27,7 +27,7 @@ const Login = () => {
       setError('');
       setLoading(true);
       await login(email, password);
-      navigate('/dashboard');
+      navigate('/admin/dashboard');
     } catch (err) {
       console.error('Login error:', err);
       setError('Failed to sign in. Please check your credentials.');

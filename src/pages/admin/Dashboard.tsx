@@ -1,12 +1,7 @@
 import { UserCheck, Users, UserX } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import AdminLayout from './AdminLayout';
-
-interface Stats {
-  totalParticipants: number;
-  activeParticipants: number;
-  inactiveParticipants: number;
-}
+import { Stats } from '../../Interface';
 
 const Dashboard = () => {
   const [stats, setStats] = useState<Stats>({
@@ -20,7 +15,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = await localStorage.getItem('authToken');
+        const token = localStorage.getItem('authToken');
 
         if (!token) {
           throw new Error('No authentication token found');
