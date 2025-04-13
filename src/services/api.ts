@@ -1,17 +1,11 @@
-import { UserData } from '../context/AuthContext';
+import { ApiResponse, UserData } from '../utils/interfaces';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
-// API response interface
-interface ApiResponse<T> {
-  success: boolean;
-  message?: string;
-  data: T;
-}
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
 /**
  * Helper function to make authenticated API requests
- */
+ **/
 async function fetchWithAuth<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -56,17 +50,17 @@ export const userApi = {
   },
 
   // Get current user data
-  getCurrentUser: async (uid: string): Promise<UserData> => {
-    const response = await fetchWithAuth<UserData>(`/users/${uid}`);
+  getCurrentUser: async (id: string): Promise<UserData> => {
+    const response = await fetchWithAuth<UserData>(`/users/${id}`);
     return response.data;
   },
 
   // Update user
   updateUser: async (
-    uid: string,
+    id: string,
     userData: Partial<UserData>
   ): Promise<UserData> => {
-    const response = await fetchWithAuth<UserData>(`/users/${uid}`, {
+    const response = await fetchWithAuth<UserData>(`/users/${id}`, {
       method: 'PUT',
       body: JSON.stringify(userData),
     });
@@ -75,13 +69,13 @@ export const userApi = {
 
   // Get all users (admin only)
   getAllUsers: async (): Promise<UserData[]> => {
-    const response = await fetchWithAuth<UserData[]>('/api/users');
+    const response = await fetchWithAuth<UserData[]>('/users');
     return response.data;
   },
 
   // Get all participants (admin only)
   getAllParticipants: async (): Promise<UserData[]> => {
-    const response = await fetchWithAuth<UserData[]>('/api/users/participants');
+    const response = await fetchWithAuth<UserData[]>('/users/participants');
     return response.data;
   },
 };

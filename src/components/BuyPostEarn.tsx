@@ -351,6 +351,7 @@ const BuyPostEarn = () => {
       className="relative bg-black overflow-hidden h-screen"
       ref={containerRef}
       aria-labelledby="buy-post-earn-title"
+      id="benefits-section"
     >
       {/* Layered background elements for depth */}
       <div

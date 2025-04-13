@@ -1,10 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../MainLayout';
+import About from '../components/About/About';
 import GetStart from '../components/GetStart/GetStart';
 import Home from '../components/Home/Home';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { AuthProvider } from '../context/AuthContext';
-import AboutPage from '../pages/About';
 import Deactivated from '../pages/Deactivated';
 import Login from '../pages/Login';
 import Privacy from '../pages/Privacy';
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/about',
-        element: <AboutPage />,
+        element: <About />,
       },
       {
         path: '/privacy',

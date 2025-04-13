@@ -26,7 +26,7 @@ const Login = () => {
     try {
       setError('');
       setLoading(true);
-      await login(email, password);
+      await login({ email, password });
       navigate('/admin/dashboard');
     } catch (err) {
       console.error('Login error:', err);

@@ -10,6 +10,7 @@ import {
   Twitter,
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,7 +23,8 @@ const SocialIcons = memo(({ iconVariants }: { iconVariants: Variants }) => (
     transition={{ duration: 0.5, delay: 0.6, ease: 'easeOut' }}
   >
     <motion.a
-      href="#"
+      href="https://instagram.com/influzio"
+      target="_blank"
       className="text-gray-400 hover:text-white"
       variants={iconVariants}
       whileHover="hover"
@@ -53,23 +55,10 @@ const SocialIcons = memo(({ iconVariants }: { iconVariants: Variants }) => (
 
 // Memoized footer link component
 const FooterLink = memo(
-  ({
-    href,
-    children,
-    variants,
-  }: {
-    href: string;
-    children: React.ReactNode;
-    variants: Variants;
-  }) => (
-    <motion.a
-      href={href}
-      className="text-gray-400 hover:text-white"
-      variants={variants}
-      whileHover="hover"
-    >
+  ({ href, children }: { href: string; children: React.ReactNode }) => (
+    <Link to={href} className="text-gray-400 hover:text-white ">
       {children}
-    </motion.a>
+    </Link>
   )
 );
 
@@ -86,17 +75,6 @@ const Footer = () => {
           ease: 'easeOut',
           staggerChildren: 0.05,
         },
-      },
-    }),
-    []
-  );
-
-  const linkVariants = useMemo(
-    () => ({
-      hover: {
-        scale: 1.1,
-        color: '#fff',
-        transition: { duration: 0.2 },
       },
     }),
     []
@@ -145,17 +123,17 @@ const Footer = () => {
     () => [
       {
         icon: MapPin,
-        text: '123 Fintech Street, Dhaka, Bangladesh',
+        text: 'United Kingdom',
         className: 'items-start',
       },
       {
         icon: Phone,
-        text: '+88 (016) 123-4567',
+        text: '+44 7496 342877',
         className: 'items-center',
       },
       {
         icon: Mail,
-        text: 'rifatsaown0@gmail.com',
+        text: 'info@influzio.com',
         className: 'items-center',
       },
     ],
@@ -173,21 +151,14 @@ const Footer = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
             >
-              <svg
-                width="40"
-                height="40"
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="mr-2"
-              >
-                <path d="M20 20 L40 20 L40 40 L20 40 Z" fill="white" />
-                <path d="M60 20 L80 20 L80 40 L60 40 Z" fill="white" />
-                <path d="M40 40 L60 40 L60 60 L40 60 Z" fill="white" />
-                <path d="M20 60 L40 60 L40 80 L20 80 Z" fill="white" />
-                <path d="M60 60 L80 60 L80 80 L60 80 Z" fill="white" />
-              </svg>
-              <h2 className="text-white text-2xl font-bold">INFLUZIO</h2>
+              <Link to="/" className="flex items-center space-x-2">
+                <img
+                  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5ZjFlZWMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib3giPjxwYXRoIGQ9Ik0yMSA4YTIgMiAwIDAgMC0xLTEuNzNsLTctNGEyIDIgMCAwIDAtMiAwbC03IDRBMiAyIDAgMCAwIDMgOHY4YTIgMiAwIDAgMCAxIDEuNzNsNyA0YTIgMiAwIDAgMCAyIDBsNy00QTIgMiAwIDAgMCAyMSAxNloiLz48cGF0aCBkPSJtMy4zIDcgOC43IDUgOC43LTUiLz48cGF0aCBkPSJNMTIgMjJWMTIiLz48L3N2Zz4="
+                  alt="Company Logo"
+                  className="h-12 w-auto"
+                />
+                <h2 className="font-bold text-2xl">INFLUZIO</h2>
+              </Link>
             </motion.div>
             <motion.p
               className="text-gray-400 mt-2"
@@ -195,12 +166,11 @@ const Footer = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4, ease: 'easeOut' }}
             >
-              Revolutionizing banking with social currency.
+              The UK’s 1st influence-powered cashback platform.
             </motion.p>
             <SocialIcons iconVariants={iconVariants} />
           </div>
 
-          {/* Card Options Section */}
           <div>
             <motion.h3
               className="text-white text-lg font-medium mb-4"
@@ -208,7 +178,7 @@ const Footer = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
             >
-              Card Options
+              Quick Links
             </motion.h3>
             <motion.ul
               className="space-y-4"
@@ -217,16 +187,11 @@ const Footer = () => {
               animate="visible"
             >
               {[
-                'Standard Card',
-                'Premium Card',
-                'Influencer Card',
-                'Benefits',
-                'Apply Now',
+                { text: 'Benefits', href: '/#benefits-section' },
+                { text: 'Apply Now', href: '/apply-now' },
               ].map((text, index) => (
                 <li key={index}>
-                  <FooterLink href="#" variants={linkVariants}>
-                    {text}
-                  </FooterLink>
+                  <FooterLink href={text.href}>{text.text}</FooterLink>
                 </li>
               ))}
             </motion.ul>
@@ -248,15 +213,15 @@ const Footer = () => {
               initial="hidden"
               animate="visible"
             >
-              {['About Us', 'Our Story', 'Blog', 'Careers', 'Press'].map(
-                (text, index) => (
-                  <li key={index}>
-                    <FooterLink href="#" variants={linkVariants}>
-                      {text}
-                    </FooterLink>
-                  </li>
-                )
-              )}
+              {[
+                { text: 'About Us', href: '/about' },
+                { text: 'Privacy Policy', href: '/privacy' },
+                { text: 'Terms and Conditions', href: '/terms' },
+              ].map((text, index) => (
+                <li key={index}>
+                  <FooterLink href={text.href}>{text.text}</FooterLink>
+                </li>
+              ))}
             </motion.ul>
           </div>
 
@@ -295,18 +260,6 @@ const Footer = () => {
           <p className="text-gray-400 text-sm text-center">
             © {new Date().getFullYear()} INFLUZIO. All rights reserved.
           </p>
-          <div className="mt-4 flex justify-center space-x-6">
-            {[
-              { text: 'Privacy Policy', href: '/privacy' },
-              { text: 'Terms of Service', href: '#' },
-              { text: 'Card Agreement', href: '#' },
-              { text: 'Refund Policy', href: '#' },
-            ].map((item, index) => (
-              <FooterLink key={index} href={item.href} variants={linkVariants}>
-                {item.text}
-              </FooterLink>
-            ))}
-          </div>
         </motion.div>
       </div>
     </footer>

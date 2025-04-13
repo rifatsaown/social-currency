@@ -10,13 +10,8 @@ import {
   User,
   UserCredential,
 } from 'firebase/auth';
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+
 import { auth } from '../firebase/config';
 import { userApi } from '../services/api';
 import {
@@ -24,44 +19,16 @@ import {
   getAuthToken,
   setupTokenRefresh,
 } from '../utils/authToken';
-
-// Define user role types
-export type UserRole = 'admin' | 'participant';
-
-// Define user data type
-export interface UserData {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  role: UserRole;
-  isActive: boolean;
-}
-
-// Define authentication context type
-interface AuthContextType {
-  currentUser: User | null;
-  userData: UserData | null;
-  isAdmin: boolean;
-  isLoading: boolean;
-  signup: (
-    email: string,
-    password: string,
-    displayName: string
-  ) => Promise<UserCredential>;
-  login: (email: string, password: string) => Promise<UserCredential>;
-  logout: () => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
-  updateUserProfile: (displayName: string) => Promise<void>;
-  reauthenticate: (password: string) => Promise<void>;
-}
+import {
+  AuthContextType,
+  AuthProviderProps,
+  LoginFormData,
+  SignupFormData,
+  UserData,
+} from '../utils/interfaces';
 
 // Create the authentication context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Auth provider props
-interface AuthProviderProps {
-  children: ReactNode;
-}
 
 // Auth provider component
 export function AuthProvider({ children }: AuthProviderProps) {
@@ -70,23 +37,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   // Signup function
-  async function signup(
-    email: string,
-    password: string,
-    displayName: string
-  ): Promise<UserCredential> {
-    const result = await createUserWithEmailAndPassword(auth, email, password);
+  async function signup(formData: SignupFormData): Promise<UserCredential> {
+    const result = await createUserWithEmailAndPassword(
+      auth,
+      formData.email,
+      formData.password
+    );
 
     // Update display name
-    await updateProfile(result.user, { displayName });
+    await updateProfile(result.user, { displayName: formData.displayName });
 
     // Create user document in MongoDB through API
     const newUserData: UserData = {
       uid: result.user.uid,
       email: result.user.email,
-      displayName,
-      role: 'participant', // Default role
-      isActive: true,
+      displayName: formData.displayName,
+      // role: 'participant', // Default role
+      // isActive: true,
     };
 
     // Get auth token first
@@ -97,22 +64,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await userApi.createUser(newUserData);
     } catch (error) {
       console.error('Error creating user in MongoDB:', error);
-      // Continue anyway since the Firebase user is created
     }
-
     return result;
   }
 
   // Login function
-  async function login(
-    email: string,
-    password: string
-  ): Promise<UserCredential> {
-    const result = await signInWithEmailAndPassword(auth, email, password);
-
+  async function login(formData: LoginFormData): Promise<UserCredential> {
+    const result = await signInWithEmailAndPassword(
+      auth,
+      formData.email,
+      formData.password
+    );
     // Get auth token
     await getAuthToken();
-
     return result;
   }
 
@@ -194,8 +158,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 uid: user.uid,
                 email: user.email,
                 displayName: user.displayName,
-                role: 'participant', // Default role
-                isActive: true,
+                // role: 'participant', // Default role
+                // isActive: true,
               };
               const createdUser = await userApi.createUser(newUserData);
               setUserData(createdUser);

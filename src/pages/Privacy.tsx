@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import Footer from '../components/Footer';
 
 const Privacy = () => {
   const sections = [
@@ -109,7 +108,7 @@ const Privacy = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      
     </>
   );
 };
