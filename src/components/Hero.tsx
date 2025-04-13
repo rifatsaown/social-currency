@@ -204,13 +204,13 @@ const Hero = () => {
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
           <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
             <h1
-              className="mt-4 text-4xl tracking-tight font-extrabold text-white sm:mt-5 sm:text-5xl lg:mt-6 xl:text-6xl leading-tight"
+              className="mt-4 text-4xl tracking-tight font-extrabold text-white sm:mt-5 sm:text-5xl lg:mt-6 leading-tight"
               ref={headingRef}
             >
               <span className="block uppercase font-semibold">
-                The World's First Social
+                The UK’s 1st influence-powered
               </span>
-              <span className="block uppercase">Currency App</span>
+              <span className="block uppercase">cashback platform</span>
             </h1>
             <p
               className="mt-3 text-lg text-gray-300 sm:mt-5 uppercase font-bold tracking-wider"
