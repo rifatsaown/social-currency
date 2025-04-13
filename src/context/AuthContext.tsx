@@ -25,7 +25,7 @@ import {
   LoginFormData,
   SignupFormData,
   UserData,
-} from '../utils/interfaces';
+} from '../Interface/index';
 
 // Create the authentication context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

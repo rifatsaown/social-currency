@@ -258,7 +258,7 @@ const Navbar = () => {
             { name: 'Terms & Conditions', path: '/terms' },
             // { name: 'Features', path: '/#features' },
             // { name: 'Cards', path: '/#cards' },
-            // { name: 'Contact', path: '/#contact' },
+            { name: 'Contact', path: '/contact-us' },
           ].map((item, index) => (
             <Link
               key={index}
