@@ -9,7 +9,7 @@ import {
   Phone,
   User,
 } from 'lucide-react';
-import {  useState } from 'react';
+import { useState } from 'react';
 import { FormField } from '../../Interface';
 
 function GetStart() {
@@ -30,7 +30,6 @@ function GetStart() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Handle input change
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value }: FormField = e.target;
@@ -142,12 +141,12 @@ function GetStart() {
                 our exclusive community of influencers.
               </p>
 
-              <div className="flex items-center space-x-6 mt-12">
+              <div className="">
                 <motion.div
                   className="flex items-center"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <div className="w-14 h-14 bg-purple-500/10 backdrop-blur-lg rounded-full flex items-center justify-center mr-3 border border-purple-500/20">
+                  {/* <div className="w-14 h-14 bg-purple-500/10 backdrop-blur-lg rounded-full flex items-center justify-center mr-3 border border-purple-500/20">
                     <svg
                       width="24"
                       height="24"
@@ -171,10 +170,10 @@ function GetStart() {
                       />
                     </svg>
                   </div>
-                  <div>
+                   <div>
                     <p className="text-sm text-gray-400">Verified by</p>
                     <p className="font-bold">VISA</p>
-                  </div>
+                  </div> */}
                 </motion.div>
 
                 <motion.div
@@ -733,7 +732,7 @@ function GetStart() {
         </motion.div>
       </div>
 
-{/* 
+      {/* 
       <motion.div
         className="fixed bottom-6 right-6"
         initial={{ opacity: 0, scale: 0.8 }}
