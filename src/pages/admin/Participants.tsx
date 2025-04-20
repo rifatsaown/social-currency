@@ -26,6 +26,7 @@ const Participants = () => {
       const formattedParticipants = participantsData.map((p) => ({
         ...p,
         id: p.uid, // For backward compatibility
+        isActive: p.isActive ?? false, // Ensure isActive is always a boolean
       }));
 
       setParticipants(formattedParticipants);
