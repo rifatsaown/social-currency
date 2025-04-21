@@ -1,3 +1,4 @@
 import ceoProfile from './profile-file.png';
+import logo from './logo.jpeg';
 
-export { ceoProfile };
+export { ceoProfile, logo };

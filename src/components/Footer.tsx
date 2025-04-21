@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { logo } from '../asset';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -152,11 +153,7 @@ const Footer = () => {
               transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
             >
               <Link to="/" className="flex items-center space-x-2">
-                <img
-                  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5ZjFlZWMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib3giPjxwYXRoIGQ9Ik0yMSA4YTIgMiAwIDAgMC0xLTEuNzNsLTctNGEyIDIgMCAwIDAtMiAwbC03IDRBMiAyIDAgMCAwIDMgOHY4YTIgMiAwIDAgMCAxIDEuNzNsNyA0YTIgMiAwIDAgMCAyIDBsNy00QTIgMiAwIDAgMCAyMSAxNloiLz48cGF0aCBkPSJtMy4zIDcgOC43IDUgOC43LTUiLz48cGF0aCBkPSJNMTIgMjJWMTIiLz48L3N2Zz4="
-                  alt="Company Logo"
-                  className="h-12 w-auto"
-                />
+                <img src={logo} alt="Company Logo" className="h-12 w-auto" />
                 <h2 className="font-bold text-2xl">INFLUZIO</h2>
               </Link>
             </motion.div>
