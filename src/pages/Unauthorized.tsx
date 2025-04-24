@@ -1,7 +1,9 @@
 import { ShieldX } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Unauthorized = () => {
+  const { logout } = useAuth(); // Assuming you have a way to get user data from context
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="text-red-500 mb-4">
@@ -20,6 +22,12 @@ const Unauthorized = () => {
       >
         Return to Home
       </Link>
+      <button
+        className="mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        onClick={logout}
+      >
+        Logout
+      </button>
     </div>
   );
 };

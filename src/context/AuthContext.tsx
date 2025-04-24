@@ -124,6 +124,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Check if user is admin
   const isAdmin = userData?.role === 'admin';
+  
 
   // Set up token refresh on component mount
   useEffect(() => {
@@ -139,6 +140,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+      
 
       if (user) {
         // Get auth token
@@ -146,7 +148,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         // Fetch user data from MongoDB through API
         try {
-          const userDataFromServer = await userApi.getCurrentUser(user.uid);
+          const userDataFromServer = await userApi.getCurrentUser(user.email as string);
           setUserData(userDataFromServer);
         } catch (error) {
           console.error('Error fetching user data from API:', error);

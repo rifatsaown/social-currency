@@ -39,8 +39,10 @@ const ProtectedRoute = ({
     return <Navigate to="/unauthorized" />;
   }
 
+  console.log(userData, 'userData in protected route');
+  
   // If user is inactive, redirect to deactivated page
-  if (userData && !userData.isActive) {
+  if (userData && userData.status === 'inactive') {
     return <Navigate to="/deactivated" />;
   }
 

@@ -29,8 +29,8 @@ export interface UserData {
   uid: string;
   email: string | null;
   displayName: string | null;
-  role?: 'admin' | 'participant' | 'brand';
-  isActive?: boolean;
+  role?: 'admin' | 'participant';
+  status?: 'active' | 'inactive';
 }
 
 export interface AuthProviderProps {
