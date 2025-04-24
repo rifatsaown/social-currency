@@ -62,16 +62,17 @@ export interface DashboardData {
 }
 
 export interface UserData {
-  _id: string;
+  _id?: string;
   fullName: string;
   email: string;
   displayName: string | null;
   role?: 'admin' | 'participant';
   status?: 'active' | 'inactive';
+  instaHandle?: string;
 }
 
 export interface Participant {
-  _id: string;
+  _id?: string;
   fullName: string;
   email: string;
   status: 'active' | 'inactive' | 'pending' | 'blocked';
@@ -88,6 +89,8 @@ export interface SignupFormData {
   email: string;
   password: string;
   displayName: string;
+  fullName: string;
+  instaHandle?: string;
 }
 
 export interface LoginFormData {

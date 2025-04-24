@@ -13,12 +13,6 @@ import {
 import { createContext, useContext, useEffect, useState } from 'react';
 
 import { auth } from '../firebase/config';
-import { userApi } from '../services/api';
-import {
-  clearAuthToken,
-  getAuthToken,
-  setupTokenRefresh,
-} from '../utils/authToken';
 import {
   AuthContextType,
   AuthProviderProps,
@@ -26,6 +20,12 @@ import {
   SignupFormData,
   UserData,
 } from '../Interface/index';
+import { userApi } from '../services/api';
+import {
+  clearAuthToken,
+  getAuthToken,
+  setupTokenRefresh,
+} from '../utils/authToken';
 
 // Create the authentication context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -49,9 +49,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     // Create user document in MongoDB through API
     const newUserData: UserData = {
-      uid: result.user.uid,
-      email: result.user.email,
+      fullName: formData.fullName,
+      email: result.user.email || '',
       displayName: formData.displayName,
+      instaHandle: formData.instaHandle,
       // role: 'participant', // Default role
       // isActive: true,
     };
@@ -124,7 +125,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Check if user is admin
   const isAdmin = userData?.role === 'admin';
-  
 
   // Set up token refresh on component mount
   useEffect(() => {
@@ -140,7 +140,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
-      
 
       if (user) {
         // Get auth token
@@ -148,7 +147,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         // Fetch user data from MongoDB through API
         try {
-          const userDataFromServer = await userApi.getCurrentUser(user.email as string);
+          const userDataFromServer = await userApi.getCurrentUser(
+            user.email as string
+          );
           setUserData(userDataFromServer);
         } catch (error) {
           console.error('Error fetching user data from API:', error);
@@ -157,9 +158,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
           if (user.email && user.displayName) {
             try {
               const newUserData: UserData = {
-                uid: user.uid,
+                fullName: user.displayName,
                 email: user.email,
                 displayName: user.displayName,
+                instaHandle: userData?.instaHandle,
                 // role: 'participant', // Default role
                 // isActive: true,
               };

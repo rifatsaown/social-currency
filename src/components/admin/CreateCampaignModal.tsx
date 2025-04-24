@@ -191,11 +191,13 @@ const CreateCampaignModal = ({
                     <div
                       key={participant._id}
                       className={`flex items-center px-3 py-2 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer ${
-                        selectedParticipants.includes(participant._id)
+                        selectedParticipants.includes(participant._id as string)
                           ? 'bg-purple-50'
                           : ''
                       }`}
-                      onClick={() => toggleParticipant(participant._id)}
+                      onClick={() =>
+                        toggleParticipant(participant._id as string)
+                      }
                     >
                       <div className="flex-1">
                         <div className="font-medium">
@@ -210,7 +212,9 @@ const CreateCampaignModal = ({
                           </div>
                         )}
                       </div>
-                      {selectedParticipants.includes(participant._id) && (
+                      {selectedParticipants.includes(
+                        participant._id as string
+                      ) && (
                         <CheckCircle className="text-purple-600" size={20} />
                       )}
                     </div>
