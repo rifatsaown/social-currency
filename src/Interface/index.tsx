@@ -114,3 +114,29 @@ export interface ApiResponse<T> {
   message?: string;
   data: T;
 }
+
+// Campaign interfaces
+export interface CampaignParticipant {
+  _id: string;
+  fullName: string;
+  email: string;
+  status: 'active' | 'inactive' | 'pending' | 'blocked';
+  instaHandle?: string;
+}
+
+export interface Campaign {
+  _id: string;
+  name: string;
+  description?: string;
+  status: 'active' | 'completed' | 'draft';
+  participants: CampaignParticipant[];
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+}
+
+export interface CreateCampaignData {
+  name: string;
+  description?: string;
+  participants: string[]; // Array of participant IDs
+}

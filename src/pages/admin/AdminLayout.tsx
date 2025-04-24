@@ -1,4 +1,5 @@
 import {
+  BarChart,
   CheckCircle,
   ChevronLeft,
   ChevronRight,
@@ -54,6 +55,11 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       path: '/admin/eligibility-checks',
       name: 'Eligibility Checks',
       icon: CheckCircle,
+    },
+    {
+      path: '/admin/campaigns',
+      name: 'Campaigns',
+      icon: BarChart,
     },
   ];
 

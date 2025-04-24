@@ -1,7 +1,12 @@
-import { ApiResponse, UserData } from '../Interface';
+import {
+  ApiResponse,
+  Campaign,
+  CreateCampaignData,
+  UserData,
+} from '../Interface';
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+  import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 /**
  * Helper function to make authenticated API requests
@@ -11,7 +16,7 @@ async function fetchWithAuth<T>(
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
   // Get the firebase auth token from local storage
-  const token = localStorage.getItem('firebase_token');
+  const token = localStorage.getItem('authToken'); // Use 'authToken' instead of 'firebase_token'
 
   if (!token) {
     throw new Error('No authentication token found');
@@ -23,17 +28,28 @@ async function fetchWithAuth<T>(
     ...options.headers,
   };
 
+  console.log(`Making request to: ${API_BASE_URL}${endpoint}`, {
+    method: options.method || 'GET',
+    body: options.body || null,
+  });
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
   });
 
+  const responseData = await response.json().catch(() => ({}));
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || 'API request failed');
+    console.error('API Error Response:', responseData);
+    throw new Error(
+      responseData.message ||
+        JSON.stringify(responseData) ||
+        'API request failed'
+    );
   }
 
-  return response.json();
+  return responseData;
 }
 
 /**
@@ -162,6 +178,54 @@ export const userApi = {
         body: JSON.stringify({ id, status }),
       }
     );
+    return response.data;
+  },
+};
+
+/**
+ * Campaign API functions
+ */
+export const campaignApi = {
+  // Get all campaigns
+  getAllCampaigns: async (): Promise<Campaign[]> => {
+    const response = await fetchWithAuth<Campaign[]>('/campaigns');
+    return response.data;
+  },
+
+  // Get a single campaign by ID
+  getCampaignById: async (id: string): Promise<Campaign> => {
+    const response = await fetchWithAuth<Campaign>(`/campaigns/${id}`);
+    return response.data;
+  },
+
+  // Create a new campaign
+  createCampaign: async (
+    campaignData: CreateCampaignData
+  ): Promise<Campaign> => {
+    const response = await fetchWithAuth<Campaign>('/campaigns', {
+      method: 'POST',
+      body: JSON.stringify(campaignData),
+    });
+    return response.data;
+  },
+
+  // Update a campaign
+  updateCampaign: async (
+    id: string,
+    campaignData: Partial<CreateCampaignData>
+  ): Promise<Campaign> => {
+    const response = await fetchWithAuth<Campaign>(`/campaigns/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(campaignData),
+    });
+    return response.data;
+  },
+
+  // Delete a campaign
+  deleteCampaign: async (id: string): Promise<void> => {
+    const response = await fetchWithAuth<void>(`/campaigns/${id}`, {
+      method: 'DELETE',
+    });
     return response.data;
   },
 };

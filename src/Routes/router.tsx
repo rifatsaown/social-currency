@@ -15,6 +15,8 @@ import Dashboard from '../pages/admin/Dashboard';
 import EligibilityChecksPage from '../pages/admin/EligibilityChecksPage';
 import Invitations from '../pages/admin/Invitations';
 import Participants from '../pages/admin/Participants';
+import CampaignDetail from '../pages/admin/campaign/CampaignDetail';
+import Campaigns from '../pages/admin/campaign/Campaigns';
 import ErrorBoundary from './ErrorBoundary';
 
 const router = createBrowserRouter([
@@ -83,6 +85,30 @@ const router = createBrowserRouter([
         <AuthProvider>
           <ProtectedRoute requireAdmin>
             <Participants />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/admin/campaigns',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute requireAdmin>
+            <Campaigns />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/admin/campaigns/:id',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute requireAdmin>
+            <CampaignDetail />
           </ProtectedRoute>
         </AuthProvider>
       </ErrorBoundary>
