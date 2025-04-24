@@ -1,13 +1,10 @@
 import {
-  Bell,
   CheckCircle,
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
   LogOut,
   Mail,
-  Search,
-  Settings,
   Users,
 } from 'lucide-react';
 import { ReactNode, useEffect, useState } from 'react';
@@ -147,54 +144,6 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           sidebarCollapsed ? 'ml-20' : 'ml-72'
         } ${isMobile ? 'ml-0' : ''}`}
       >
-        <header className="sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200">
-          <div className="flex items-center justify-between h-16 px-6">
-            {isMobile && (
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-lg text-gray-600 hover:bg-gray-100"
-              >
-                {mobileMenuOpen ? (
-                  <ChevronLeft size={24} />
-                ) : (
-                  <ChevronRight size={24} />
-                )}
-              </button>
-            )}
-
-            <h2 className="text-xl font-semibold text-gray-800 hidden sm:block">
-              {navItems.find((item) => item.path === location.pathname)?.name ||
-                'Admin Dashboard'}
-            </h2>
-
-            <div className="flex-1 max-w-lg mx-4 hidden md:block">
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Search size={18} className="text-gray-400" />
-                </span>
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <button className="p-2 rounded-full text-gray-600 hover:bg-gray-100 relative">
-                <Bell size={20} />
-                <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-              </button>
-              <button className="p-2 rounded-full text-gray-600 hover:bg-gray-100">
-                <Settings size={20} />
-              </button>
-              <div className="h-9 w-9 rounded-full bg-purple-600 text-white flex items-center justify-center">
-                {userData?.displayName?.charAt(0) || 'U'}
-              </div>
-            </div>
-          </div>
-        </header>
-
         <main className="p-6">{children}</main>
       </div>
 
