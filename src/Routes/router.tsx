@@ -16,6 +16,7 @@ import EligibilityChecksPage from '../pages/admin/EligibilityChecksPage';
 import Invitations from '../pages/admin/Invitations';
 import Participants from '../pages/admin/Participants';
 import CampaignDetail from '../pages/admin/campaign/CampaignDetail';
+import CampaignEdit from '../pages/admin/campaign/CampaignEdit';
 import Campaigns from '../pages/admin/campaign/Campaigns';
 import ErrorBoundary from './ErrorBoundary';
 
@@ -109,6 +110,18 @@ const router = createBrowserRouter([
         <AuthProvider>
           <ProtectedRoute requireAdmin>
             <CampaignDetail />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/admin/campaigns/edit/:id',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute requireAdmin>
+            <CampaignEdit />
           </ProtectedRoute>
         </AuthProvider>
       </ErrorBoundary>
