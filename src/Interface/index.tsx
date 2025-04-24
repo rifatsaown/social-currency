@@ -62,11 +62,22 @@ export interface DashboardData {
 }
 
 export interface UserData {
-  uid: string;
-  email: string | null;
+  _id: string;
+  fullName: string;
+  email: string;
   displayName: string | null;
   role?: 'admin' | 'participant';
   status?: 'active' | 'inactive';
+}
+
+export interface Participant {
+  _id: string;
+  fullName: string;
+  email: string;
+  status: 'active' | 'inactive' | 'pending' | 'blocked';
+  instaHandle?: string;
+  phoneNumber?: string;
+  createdAt?: string;
 }
 
 export interface AuthProviderProps {

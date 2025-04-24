@@ -109,6 +109,27 @@ export const userApi = {
     return response.data;
   },
 
+  // Update user status (active/inactive)
+  updateUserStatus: async (
+    userId: string,
+    isActive: boolean
+  ): Promise<UserData> => {
+    const status = isActive ? 'active' : 'inactive';
+    const response = await fetchWithAuth<UserData>('/users/update-status', {
+      method: 'POST',
+      body: JSON.stringify({ userId, status }),
+    });
+    return response.data;
+  },
+
+  // Delete user
+  deleteUser: async (id: string): Promise<void> => {
+    const response = await fetchWithAuth<void>(`/users/${id}`, {
+      method: 'DELETE',
+    });
+    return response.data;
+  },
+
   // Get all users (admin only)
   getAllUsers: async (): Promise<UserData[]> => {
     const response = await fetchWithAuth<UserData[]>('/users');

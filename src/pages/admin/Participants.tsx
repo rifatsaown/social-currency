@@ -1,14 +1,15 @@
-import { UserCheck, UserX } from 'lucide-react';
+import { Trash2, UserCheck, UserX } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { userApi } from '../../services/api';
 import AdminLayout from './AdminLayout';
 
 interface Participant {
-  id: string; // For backward compatibility
-  uid: string;
-  displayName: string | null;
-  email: string | null;
-  isActive: boolean;
+  _id: string;
+  fullName: string;
+  email: string;
+  status: 'active' | 'inactive' | 'pending' | 'blocked';
+  instaHandle?: string;
+  phoneNumber?: string;
   createdAt?: string;
 }
 
@@ -17,19 +18,17 @@ const Participants = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toggleLoading, setToggleLoading] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
+
+  console.log(participants);
+  
 
   const fetchParticipants = async () => {
     try {
+      setLoading(true);
+      setError('');
       const participantsData = await userApi.getAllParticipants();
-
-      // Map the data to match our component's expected format
-      const formattedParticipants = participantsData.map((p) => ({
-        ...p,
-        id: p.uid, // For backward compatibility
-        isActive: p.isActive ?? false, // Ensure isActive is always a boolean
-      }));
-
-      setParticipants(formattedParticipants);
+      setParticipants(participantsData as Participant[]);
     } catch (err) {
       console.error('Error fetching participants:', err);
       setError('Failed to load participants');
@@ -42,22 +41,51 @@ const Participants = () => {
     fetchParticipants();
   }, []);
 
-  const toggleUserStatus = async (userId: string, isActive: boolean) => {
+  const toggleUserStatus = async (userId: string, makeActive: boolean) => {
     try {
       setToggleLoading(userId);
+      setError('');
 
-      // Update user status through API
-      await userApi.updateUser(userId, { isActive });
+      // Use our updateUserStatus method that properly maps to backend status
+      await userApi.updateUserStatus(userId, makeActive);
 
       // Update the local state
       setParticipants((prevParticipants) =>
-        prevParticipants.map((p) => (p.id === userId ? { ...p, isActive } : p))
+        prevParticipants.map((p) =>
+          p._id === userId
+            ? { ...p, status: makeActive ? 'active' : 'inactive' }
+            : p
+        )
       );
     } catch (err) {
       console.error('Error toggling user status:', err);
       setError('Failed to update user status');
     } finally {
       setToggleLoading(null);
+    }
+  };
+
+  const deleteUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to delete this user?')) {
+      return;
+    }
+
+    try {
+      setDeleteLoading(userId);
+      setError('');
+
+      // Delete user through API
+      await userApi.deleteUser(userId);
+
+      // Remove from local state
+      setParticipants((prevParticipants) =>
+        prevParticipants.filter((p) => p._id !== userId)
+      );
+    } catch (err) {
+      console.error('Error deleting user:', err);
+      setError('Failed to delete user');
+    } finally {
+      setDeleteLoading(null);
     }
   };
 
@@ -116,16 +144,23 @@ const Participants = () => {
                   scope="col"
                   className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
+                  Instagram Handle
+
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {participants.map((participant) => (
-                <tr key={participant.id}>
+                <tr key={participant._id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
-                      {participant.displayName || 'No Name'}
+                      {participant.fullName || 'No Name'}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -136,12 +171,12 @@ const Participants = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        participant.isActive
+                        participant.status === 'active'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800'
                       }`}
                     >
-                      {participant.isActive ? 'Active' : 'Inactive'}
+                      {participant.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -149,22 +184,44 @@ const Participants = () => {
                       ? new Date(participant.createdAt).toLocaleDateString()
                       : 'Unknown'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    {toggleLoading === participant.id ? (
-                      <span className="text-gray-400">Processing...</span>
-                    ) : participant.isActive ? (
-                      <button
-                        onClick={() => toggleUserStatus(participant.id, false)}
-                        className="text-red-600 hover:text-red-900 flex items-center justify-end gap-1"
-                      >
-                        <UserX size={16} /> Deactivate
-                      </button>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {participant.instaHandle || 'No Handle'}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-y-2">
+                    {toggleLoading === participant._id ? (
+                      <div className="text-gray-400">Processing status...</div>
+                    ) : (
+                      <>
+                        {participant.status === 'active' ? (
+                          <button
+                            onClick={() =>
+                              toggleUserStatus(participant._id, false)
+                            }
+                            className="text-red-600 hover:text-red-900 flex items-center justify-end gap-1 w-full"
+                          >
+                            <UserX size={16} /> Deactivate
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() =>
+                              toggleUserStatus(participant._id, true)
+                            }
+                            className="text-green-600 hover:text-green-900 flex items-center justify-end gap-1 w-full"
+                          >
+                            <UserCheck size={16} /> Activate
+                          </button>
+                        )}
+                      </>
+                    )}
+
+                    {deleteLoading === participant._id ? (
+                      <div className="text-gray-400">Deleting...</div>
                     ) : (
                       <button
-                        onClick={() => toggleUserStatus(participant.id, true)}
-                        className="text-green-600 hover:text-green-900 flex items-center justify-end gap-1"
+                        onClick={() => deleteUser(participant._id)}
+                        className="text-red-600 hover:text-red-900 flex items-center justify-end gap-1 w-full"
                       >
-                        <UserCheck size={16} /> Activate
+                        <Trash2 size={16} /> Delete
                       </button>
                     )}
                   </td>
