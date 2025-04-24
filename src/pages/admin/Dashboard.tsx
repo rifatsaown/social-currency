@@ -22,7 +22,7 @@ const Dashboard = () => {
         }
 
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/firebase-users/participants`,
+          `${import.meta.env.VITE_API_URL}/users`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -35,13 +35,15 @@ const Dashboard = () => {
         }
 
         const data = await response.json();
-        const participants = data.participants || [];
+        const participants = data.data || [];
+        console.log('Fetched participants:', participants);
+
 
         setStats({
           totalParticipants: participants.length,
-          activeParticipants: participants.filter((p: { isActive: unknown; }) => p.isActive)
+          activeParticipants: participants.filter((p: { status: unknown; }) => p.status === 'active')
             .length,
-          inactiveParticipants: participants.filter((p: { isActive: unknown; }) => !p.isActive)
+          inactiveParticipants: participants.filter((p: { status: unknown; }) => p.status !== 'active')
             .length,
         });
       } catch (err) {
