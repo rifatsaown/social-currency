@@ -1,12 +1,11 @@
 import { User, UserCredential } from 'firebase/auth';
 import { ReactNode } from 'react';
 
-
 export interface CustomButtonProps {
-    buttonText: string;
-    onClick?: () => void;
-    className?: string;
-  }
+  buttonText: string;
+  onClick?: () => void;
+  className?: string;
+}
 
 export interface ParallaxEvent {
   clientX: number;
@@ -22,8 +21,45 @@ export interface Stats {
   totalParticipants: number;
   activeParticipants: number;
   inactiveParticipants: number;
+  influencers?: number;
+  brands?: number;
+  admins?: number;
 }
 
+export interface ActivityLog {
+  _id: string;
+  userId: {
+    _id: string;
+    fullName: string;
+    email: string;
+  };
+  action: string;
+  details?: string;
+  timestamp: Date;
+  status: 'pending' | 'completed' | 'failed';
+}
+
+export interface ChartData {
+  statusDistribution: {
+    active: number;
+    inactive: number;
+    pending: number;
+    blocked: number;
+  };
+  monthlyRegistrations: {
+    _id: {
+      month: number;
+      year: number;
+    };
+    count: number;
+  }[];
+}
+
+export interface DashboardData {
+  userStats: Stats;
+  charts: ChartData;
+  recentActivities: ActivityLog[];
+}
 
 export interface UserData {
   uid: string;
@@ -60,7 +96,6 @@ export interface AuthContextType {
   updateUserProfile: (displayName: string) => Promise<void>;
   reauthenticate: (password: string) => Promise<void>;
 }
-
 
 // API response interface
 export interface ApiResponse<T> {
