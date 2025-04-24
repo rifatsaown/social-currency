@@ -12,11 +12,6 @@ const ProtectedRoute = ({
   requireAdmin = false,
 }: ProtectedRouteProps) => {
   const { currentUser, userData, isAdmin, isLoading } = useAuth();
-
-  console.log(userData, 'userData');
-  console.log(currentUser, 'currentUser');
-  console.log(isAdmin, 'isAdmin');
-  console.log(isLoading, 'isLoading');
   
 
   // Show loading state

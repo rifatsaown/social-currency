@@ -123,9 +123,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     await reauthenticateWithCredential(currentUser, credential);
   }
 
-  // Check if user is admin
-  const isAdmin = userData?.role === 'admin';
-
   // Set up token refresh on component mount
   useEffect(() => {
     const unsubscribeTokenRefresh = setupTokenRefresh();
@@ -140,6 +137,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+      setIsLoading(true); // Ensure loading is true while checking user status
 
       if (user) {
         // Get auth token
@@ -177,7 +175,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         clearAuthToken();
       }
 
-      setIsLoading(false);
+      setIsLoading(false); // Only set loading to false after all checks and data fetching
     });
 
     return () => unsubscribe();
@@ -186,7 +184,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const value: AuthContextType = {
     currentUser,
     userData,
-    isAdmin,
+    isAdmin: userData?.role === 'admin' || false, // Simplified isAdmin check, loading state handled separately
     isLoading,
     signup,
     login,
