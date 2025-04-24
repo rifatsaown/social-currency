@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { FormField } from '../../Interface';
+import { submitEligibilityRequest } from '../../services/api';
 
 function GetStart() {
   // Form state
@@ -28,6 +29,7 @@ function GetStart() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [apiError, setApiError] = useState<string | null>(null);
 
   // Handle input change
 
@@ -62,16 +64,23 @@ function GetStart() {
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     if (!validateFields()) return;
 
     setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
+    setApiError(null);
+    try {
+      await submitEligibilityRequest(formData);
       setIsSubmitting(false);
       setShowSuccess(true);
-    }, 2000);
+    } catch (error: unknown) {
+      setIsSubmitting(false);
+      setApiError('Failed to submit the application. Please try again later.');
+      console.error('Error submitting form:', error);
+    }
   };
 
   // Animated background elements
@@ -671,6 +680,12 @@ function GetStart() {
                             </span>
                           </label>
                         </div>
+
+                        {apiError && (
+                          <p className="text-red-400 text-sm mb-6">
+                            {apiError}
+                          </p>
+                        )}
 
                         <div className="flex justify-between">
                           <motion.button

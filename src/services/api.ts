@@ -37,6 +37,48 @@ async function fetchWithAuth<T>(
 }
 
 /**
+ * Public API endpoints that don't require authentication
+ */
+async function fetchPublic<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<ApiResponse<T>> {
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    ...options,
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'API request failed');
+  }
+
+  return response.json();
+}
+
+/**
+ * Submit eligibility check request (public endpoint)
+ */
+export const submitEligibilityRequest = async (data: {
+  fullName: string;
+  instagramHandle: string;
+  mobileNumber: string;
+  email: string;
+  city: string;
+}) => {
+  const response = await fetchPublic('/users/eligibility-request', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return response.data;
+};
+
+/**
  * User API functions
  */
 export const userApi = {
@@ -76,6 +118,29 @@ export const userApi = {
   // Get all participants (admin only)
   getAllParticipants: async (): Promise<UserData[]> => {
     const response = await fetchWithAuth<UserData[]>('/users/participants');
+    return response.data;
+  },
+
+  // Get all eligibility checks (admin only)
+  getAllEligibilityChecks: async (): Promise<unknown[]> => {
+    const response = await fetchWithAuth<unknown[]>(
+      '/users/eligibility-checks'
+    );
+    return response.data;
+  },
+
+  // Process eligibility check (approve/reject) (admin only)
+  processEligibilityCheck: async (
+    id: string,
+    status: 'approved' | 'rejected'
+  ): Promise<unknown> => {
+    const response = await fetchWithAuth<unknown>(
+      '/users/eligibility-process',
+      {
+        method: 'POST',
+        body: JSON.stringify({ id, status }),
+      }
+    );
     return response.data;
   },
 };

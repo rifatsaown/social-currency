@@ -1,5 +1,6 @@
 import {
   Bell,
+  CheckCircle,
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
@@ -52,6 +53,11 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     { path: '/admin/dashboard', name: 'Dashboard', icon: LayoutDashboard },
     { path: '/admin/participants', name: 'Participants', icon: Users },
     { path: '/admin/invitations', name: 'Invitations', icon: Mail },
+    {
+      path: '/admin/eligibility-checks',
+      name: 'Eligibility Checks',
+      icon: CheckCircle,
+    },
   ];
 
   return (

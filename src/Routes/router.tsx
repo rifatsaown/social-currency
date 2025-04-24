@@ -12,6 +12,7 @@ import Privacy from '../pages/Privacy';
 import Terms from '../pages/Terms';
 import Unauthorized from '../pages/Unauthorized';
 import Dashboard from '../pages/admin/Dashboard';
+import EligibilityChecksPage from '../pages/admin/EligibilityChecksPage';
 import Invitations from '../pages/admin/Invitations';
 import Participants from '../pages/admin/Participants';
 import ErrorBoundary from './ErrorBoundary';
@@ -94,6 +95,18 @@ const router = createBrowserRouter([
         <AuthProvider>
           <ProtectedRoute requireAdmin>
             <Invitations />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/admin/eligibility-checks',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute requireAdmin>
+            <EligibilityChecksPage />
           </ProtectedRoute>
         </AuthProvider>
       </ErrorBoundary>
