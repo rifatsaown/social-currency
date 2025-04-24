@@ -4,7 +4,7 @@ import {
   ChevronRight,
   LayoutDashboard,
   LogOut,
-  Mail,
+  // Mail,
   Users,
 } from 'lucide-react';
 import { ReactNode, useEffect, useState } from 'react';
@@ -49,7 +49,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const navItems = [
     { path: '/admin/dashboard', name: 'Dashboard', icon: LayoutDashboard },
     { path: '/admin/participants', name: 'Participants', icon: Users },
-    { path: '/admin/invitations', name: 'Invitations', icon: Mail },
+    // { path: '/admin/invitations', name: 'Invitations', icon: Mail },
     {
       path: '/admin/eligibility-checks',
       name: 'Eligibility Checks',
