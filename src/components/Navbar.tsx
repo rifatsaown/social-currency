@@ -2,8 +2,8 @@ import gsap from 'gsap';
 import { Menu, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import CustomButton from './Button/CustomButton';
 import { logo } from '../asset';
+import CustomButton from './Button/CustomButton';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -291,9 +291,7 @@ const Navbar = () => {
           </div>
           <div className="mt-4 sm:mt-6">
             <Link to="/login">
-              <CustomButton
-                buttonText="Log In"
-              />
+              <CustomButton buttonText="Log In" />
             </Link>
           </div>
         </div>
