@@ -81,6 +81,7 @@ export interface Participant {
   phoneNumber?: string;
   createdAt?: string;
   coinBalance?: number;
+  password?: string;
 }
 
 export interface AuthProviderProps {

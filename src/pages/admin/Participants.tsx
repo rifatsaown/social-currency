@@ -1,4 +1,12 @@
-import { Trash2, UserCheck, UserX } from 'lucide-react';
+import {
+  CoinsIcon,
+  Eye,
+  EyeOff,
+  Search,
+  Trash2,
+  UserCheck,
+  UserX,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { userApi } from '../../services/api';
 import AdminLayout from './AdminLayout';
@@ -11,17 +19,34 @@ interface Participant {
   instaHandle?: string;
   phoneNumber?: string;
   createdAt?: string;
+  password?: string;
+  coinBalance?: number;
 }
 
 const Participants = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [filteredParticipants, setFilteredParticipants] = useState<
+    Participant[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toggleLoading, setToggleLoading] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
-
-  console.log(participants);
-  
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showPassword, setShowPassword] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const [coinBalanceModal, setCoinBalanceModal] = useState<{
+    isOpen: boolean;
+    userId: string | null;
+    currentBalance: number;
+  }>({
+    isOpen: false,
+    userId: null,
+    currentBalance: 0,
+  });
+  const [coinAmount, setCoinAmount] = useState<number>(0);
+  const [coinLoading, setCoinLoading] = useState(false);
 
   const fetchParticipants = async () => {
     try {
@@ -29,6 +54,7 @@ const Participants = () => {
       setError('');
       const participantsData = await userApi.getAllParticipants();
       setParticipants(participantsData as Participant[]);
+      setFilteredParticipants(participantsData as Participant[]);
     } catch (err) {
       console.error('Error fetching participants:', err);
       setError('Failed to load participants');
@@ -40,6 +66,21 @@ const Participants = () => {
   useEffect(() => {
     fetchParticipants();
   }, []);
+
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredParticipants(participants);
+    } else {
+      const filtered = participants.filter(
+        (participant) =>
+          participant.fullName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          participant.email.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredParticipants(filtered);
+    }
+  }, [searchTerm, participants]);
 
   const toggleUserStatus = async (userId: string, makeActive: boolean) => {
     try {
@@ -89,12 +130,82 @@ const Participants = () => {
     }
   };
 
+  const togglePasswordVisibility = (userId: string) => {
+    setShowPassword((prev) => ({ ...prev, [userId]: !prev[userId] }));
+  };
+
+  const openCoinBalanceModal = (userId: string, currentBalance: number = 0) => {
+    setCoinBalanceModal({
+      isOpen: true,
+      userId,
+      currentBalance,
+    });
+    setCoinAmount(0);
+  };
+
+  const closeCoinBalanceModal = () => {
+    setCoinBalanceModal({
+      isOpen: false,
+      userId: null,
+      currentBalance: 0,
+    });
+    setCoinAmount(0);
+  };
+
+  const updateCoinBalance = async () => {
+    if (!coinBalanceModal.userId || coinAmount === 0) return;
+
+    try {
+      setCoinLoading(true);
+      setError('');
+
+      // Update coin balance through API
+      const updatedUser = await userApi.updateCoinBalance(
+        coinBalanceModal.userId,
+        coinAmount
+      );
+
+      // Update local state
+      setParticipants((prevParticipants) =>
+        prevParticipants.map((p) =>
+          p._id === coinBalanceModal.userId
+            ? { ...p, coinBalance: updatedUser.coinBalance }
+            : p
+        )
+      );
+
+      closeCoinBalanceModal();
+    } catch (err) {
+      console.error('Error updating coin balance:', err);
+      setError('Failed to update coin balance');
+    } finally {
+      setCoinLoading(false);
+    }
+  };
+
   return (
     <AdminLayout>
       <div className="mb-6 flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold">Manage Participants</h1>
           <p className="text-gray-600">View and manage all participants</p>
+        </div>
+      </div>
+
+      {/* Search bar */}
+      <div className="mb-4 relative">
+        <div className="relative">
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={18}
+          />
+          <input
+            type="text"
+            placeholder="Search by name or email"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
       </div>
 
@@ -107,7 +218,7 @@ const Participants = () => {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           {error}
         </div>
-      ) : participants.length === 0 ? (
+      ) : filteredParticipants.length === 0 ? (
         <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
           No participants found.
         </div>
@@ -142,10 +253,21 @@ const Participants = () => {
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Instagram Handle
-
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Temp Password
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Coin Balance
                 </th>
                 <th
                   scope="col"
@@ -156,7 +278,7 @@ const Participants = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {participants.map((participant) => (
+              {filteredParticipants.map((participant) => (
                 <tr key={participant._id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
@@ -186,6 +308,55 @@ const Participants = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {participant.instaHandle || 'No Handle'}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    {participant.password ? (
+                      <div className="flex items-center">
+                        <span className="text-gray-700 font-mono">
+                          {showPassword[participant._id]
+                            ? participant.password
+                            : '••••••••'}
+                        </span>
+                        <button
+                          onClick={() =>
+                            togglePasswordVisibility(participant._id)
+                          }
+                          className="ml-2 text-gray-500 hover:text-gray-700"
+                          title={
+                            showPassword[participant._id]
+                              ? 'Hide password'
+                              : 'Show password'
+                          }
+                        >
+                          {showPassword[participant._id] ? (
+                            <EyeOff size={16} />
+                          ) : (
+                            <Eye size={16} />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400">Not available</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <span className="text-sm text-gray-700 mr-2">
+                        {participant.coinBalance || 0}
+                      </span>
+                      <button
+                        onClick={() =>
+                          openCoinBalanceModal(
+                            participant._id,
+                            participant.coinBalance || 0
+                          )
+                        }
+                        className="text-blue-500 hover:text-blue-700 p-1 rounded hover:bg-blue-100"
+                        title="Update coin balance"
+                      >
+                        <CoinsIcon size={16} />
+                      </button>
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-y-2">
                     {toggleLoading === participant._id ? (
@@ -229,6 +400,76 @@ const Participants = () => {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Coin Balance Modal */}
+      {coinBalanceModal.isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 className="text-lg font-bold mb-4">Update Coin Balance</h3>
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-1">Current Balance</p>
+              <p className="text-lg font-semibold">
+                {coinBalanceModal.currentBalance} coins
+              </p>
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Add/Remove Coins
+              </label>
+              <div className="flex items-center">
+                <button
+                  onClick={() =>
+                    setCoinAmount((prev) => Math.max(-1000, prev - 10))
+                  }
+                  className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-l"
+                >
+                  -10
+                </button>
+                <input
+                  type="number"
+                  value={coinAmount}
+                  onChange={(e) => setCoinAmount(Number(e.target.value))}
+                  className="border-y border-gray-300 p-2 w-full text-center"
+                  placeholder="Enter amount"
+                />
+                <button
+                  onClick={() =>
+                    setCoinAmount((prev) => Math.min(1000, prev + 10))
+                  }
+                  className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-r"
+                >
+                  +10
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Enter a positive number to add coins, negative to remove coins
+              </p>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={closeCoinBalanceModal}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={updateCoinBalance}
+                disabled={coinAmount === 0 || coinLoading}
+                className={`px-4 py-2 rounded-md text-sm font-medium text-white 
+                ${
+                  coinAmount === 0
+                    ? 'bg-blue-300'
+                    : 'bg-blue-600 hover:bg-blue-700'
+                }
+                ${coinLoading ? 'opacity-75 cursor-not-allowed' : ''}
+                `}
+              >
+                {coinLoading ? 'Updating...' : 'Update Balance'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </AdminLayout>
