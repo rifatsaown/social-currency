@@ -1,4 +1,13 @@
-import { Check, Instagram, Mail, MapPin, Phone, User, X } from 'lucide-react';
+import {
+  Check,
+  Copy,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  User,
+  X,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { userApi } from '../../services/api';
 
@@ -13,6 +22,12 @@ interface EligibilityCheck {
   createdAt: string;
 }
 
+interface ApprovedUser {
+  id: string;
+  email: string;
+  temporaryPassword: string;
+}
+
 const EligibilityChecks = () => {
   const [eligibilityChecks, setEligibilityChecks] = useState<
     EligibilityCheck[]
@@ -21,6 +36,8 @@ const EligibilityChecks = () => {
   const [processing, setProcessing] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [approvedUser, setApprovedUser] = useState<ApprovedUser | null>(null);
+  const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
     loadEligibilityChecks();
@@ -44,37 +61,55 @@ const EligibilityChecks = () => {
     setProcessing((prev) => ({ ...prev, [id]: true }));
     setError(null);
     setSuccess(null);
+    setApprovedUser(null);
 
     try {
-      await userApi.processEligibilityCheck(id, status);
-      setSuccess(
-        `User has been ${
-          status === 'approved' ? 'approved' : 'rejected'
-        } successfully`
-      );
+      const response = await userApi.processEligibilityCheck(id, status);
+
+      if (status === 'approved') {
+        // Store the temporary password from the response
+        const typedResponse = response as { email: string; temporaryPassword: string };
+        setApprovedUser({
+          id,
+          email: typedResponse.email,
+          temporaryPassword: typedResponse.temporaryPassword,
+        });
+
+        setSuccess(
+          'User has been approved and account has been created successfully'
+        );
+      } else {
+        setSuccess('User has been rejected successfully');
+      }
 
       // Update the list
       setEligibilityChecks((prev) =>
         prev.map((check) => (check._id === id ? { ...check, status } : check))
       );
 
-      // Refresh the list after 2 seconds
+      // Refresh the list after 5 seconds (increased time to allow viewing credentials)
       setTimeout(() => {
-        loadEligibilityChecks();
-      }, 2000);
+        if (status === 'rejected') {
+          loadEligibilityChecks();
+        }
+      }, 5000);
     } catch (err) {
       setError(`Failed to ${status} user`);
       console.error(err);
     } finally {
       setProcessing((prev) => ({ ...prev, [id]: false }));
-
-      // Clear success message after 3 seconds
-      if (success) {
-        setTimeout(() => {
-          setSuccess(null);
-        }, 3000);
-      }
     }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const closeCredentialsModal = () => {
+    setApprovedUser(null);
+    loadEligibilityChecks();
   };
 
   return (
@@ -95,9 +130,86 @@ const EligibilityChecks = () => {
         </div>
       )}
 
-      {success && (
+      {success && !approvedUser && (
         <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-md">
           {success}
+        </div>
+      )}
+
+      {/* Credentials Modal */}
+      {approvedUser && (
+        <div className="mb-6 p-4 border border-green-300 bg-green-50 rounded-lg">
+          <div className="flex justify-between items-start">
+            <h3 className="text-lg font-medium text-green-800">
+              User Account Created Successfully
+            </h3>
+            <button
+              onClick={closeCredentialsModal}
+              className="text-green-600 hover:text-green-800"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          <p className="mt-2 text-green-700">
+            An account has been created for this user. Please share these
+            credentials with them:
+          </p>
+
+          <div className="mt-4 bg-white p-4 rounded border border-green-200">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-gray-600">Email:</span>
+              <div className="flex items-center">
+                <span className="font-medium text-gray-800 mr-2">
+                  {approvedUser.email}
+                </span>
+                <button
+                  onClick={() => copyToClipboard(approvedUser.email)}
+                  className="text-blue-600 hover:text-blue-800"
+                  title="Copy email"
+                >
+                  <Copy size={16} />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Temporary Password:</span>
+              <div className="flex items-center">
+                <span className="font-medium text-gray-800 mr-2">
+                  {approvedUser.temporaryPassword}
+                </span>
+                <button
+                  onClick={() =>
+                    copyToClipboard(approvedUser.temporaryPassword)
+                  }
+                  className="text-blue-600 hover:text-blue-800"
+                  title="Copy password"
+                >
+                  <Copy size={16} />
+                </button>
+              </div>
+            </div>
+
+            {copied && (
+              <div className="mt-2 text-xs text-green-600">
+                Copied to clipboard!
+              </div>
+            )}
+          </div>
+
+          <div className="mt-3 text-xs text-gray-600">
+            Note: The user should change their password after the first login.
+          </div>
+
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={closeCredentialsModal}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
 

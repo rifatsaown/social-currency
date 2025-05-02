@@ -1,17 +1,30 @@
 import { auth } from '../firebase/config';
 
-// Get the current Firebase ID token
-export const getAuthToken = async (): Promise<string | null> => {
+// Force token refresh interval (20 minutes)
+const TOKEN_REFRESH_INTERVAL = 20 * 60 * 1000; 
+
+// Get the current Firebase ID token with force refresh option
+export const getAuthToken = async (forceRefresh = true): Promise<string | null> => {
   try {
     const user = auth.currentUser;
 
     if (!user) {
+      console.error('No user is currently logged in');
+      clearAuthToken();
       return null;
     }
 
-    const token = await user.getIdToken(true);
+    // Force refresh ensures we get a fresh token from Firebase
+    const token = await user.getIdToken(forceRefresh);
+    
+    if (!token) {
+      console.error('Failed to obtain token from Firebase');
+      return null;
+    }
+    
+    // Store the token only once in localStorage for consistency
     localStorage.setItem('authToken', token);
-    localStorage.setItem('firebase_token', token); // Store with the key expected by the API service
+    console.log('Auth token refreshed and stored');
     return token;
   } catch (error) {
     console.error('Error getting auth token:', error);
@@ -22,23 +35,34 @@ export const getAuthToken = async (): Promise<string | null> => {
 // Clear the stored token
 export const clearAuthToken = (): void => {
   localStorage.removeItem('authToken');
-  localStorage.removeItem('firebase_token');
 };
 
 // Set up a token refresh mechanism
 export const setupTokenRefresh = (): (() => void) => {
-  // Firebase automatically refreshes the token when needed,
-  // but we need to listen for auth state changes to update localStorage
-  const unsubscribe = auth.onIdTokenChanged(async (user) => {
+  // Listen for auth state changes to update the token
+  const authStateUnsubscribe = auth.onAuthStateChanged(async (user) => {
     if (user) {
-      const token = await user.getIdToken();
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('firebase_token', token); // Store with the key expected by the API service
+      await getAuthToken();
     } else {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('firebase_token');
+      clearAuthToken();
     }
   });
+  
+  // Also set up a periodic refresh to ensure we always have a fresh token
+  const intervalId = setInterval(async () => {
+    if (auth.currentUser) {
+      try {
+        await getAuthToken(true);
+        console.log('Periodic token refresh completed');
+      } catch (error) {
+        console.error('Periodic token refresh failed:', error);
+      }
+    }
+  }, TOKEN_REFRESH_INTERVAL);
 
-  return unsubscribe;
+  // Return a function to clean up both listeners
+  return () => {
+    authStateUnsubscribe();
+    clearInterval(intervalId);
+  };
 };

@@ -11,15 +11,18 @@ const API_BASE_URL =
 
 /**
  * Helper function to make authenticated API requests
+ * Includes automatic token refresh for 401 errors
  **/
 async function fetchWithAuth<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  retryWithFreshToken = true
 ): Promise<ApiResponse<T>> {
   // Get the firebase auth token from local storage
-  const token = localStorage.getItem('authToken'); // Use 'authToken' instead of 'firebase_token'
+  const token = localStorage.getItem('authToken');
 
   if (!token) {
+    console.error('No authentication token found');
     throw new Error('No authentication token found');
   }
 
@@ -34,23 +37,49 @@ async function fetchWithAuth<T>(
     body: options.body || null,
   });
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers,
+    });
 
-  const responseData = await response.json().catch(() => ({}));
+    const responseData = await response.json().catch(() => ({}));
 
-  if (!response.ok) {
-    console.error('API Error Response:', responseData);
-    throw new Error(
-      responseData.message ||
-        JSON.stringify(responseData) ||
-        'API request failed'
-    );
+    // If token expired and this is our first try, refresh token and retry
+    if (!response.ok && response.status === 401 && retryWithFreshToken) {
+      console.log('Token expired, attempting to refresh...');
+      
+      // Import dynamically to avoid circular dependency
+      const { getAuthToken } = await import('../utils/authToken');
+      
+      // Force refresh the token
+      const freshToken = await getAuthToken();
+      
+      if (freshToken) {
+        console.log('Token refreshed, retrying request');
+        // Retry the request with fresh token and prevent further retries
+        return fetchWithAuth(endpoint, options, false);
+      } else {
+        console.error('Failed to refresh token');
+        throw new Error('Authentication expired. Please log in again.');
+      }
+    }
+
+    // If other errors or second attempt failed
+    if (!response.ok) {
+      console.error('API Error Response:', responseData);
+      throw new Error(
+        responseData.message ||
+          JSON.stringify(responseData) ||
+          'API request failed'
+      );
+    }
+
+    return responseData;
+  } catch (error) {
+    console.error('Request failed:', error);
+    throw error;
   }
-
-  return responseData;
 }
 
 /**
@@ -172,13 +201,10 @@ export const userApi = {
     id: string,
     status: 'approved' | 'rejected'
   ): Promise<unknown> => {
-    const response = await fetchWithAuth<unknown>(
-      '/users/eligibility-process',
-      {
-        method: 'POST',
-        body: JSON.stringify({ id, status }),
-      }
-    );
+    const response = await fetchWithAuth<unknown>('/users/eligibility-process', {
+      method: 'POST',
+      body: JSON.stringify({ id, status }),
+    });
     return response.data;
   },
 

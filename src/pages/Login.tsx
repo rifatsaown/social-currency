@@ -16,7 +16,7 @@ const Login = () => {
   const emailFromURL = searchParams.get('email') || '';
   const [showPassword, setShowPassword] = useState(false);
 
-  const { login, isAdmin } = useAuth();
+  const { login, userData } = useAuth();
   const navigate = useNavigate();
 
   // If email is provided in URL (from invitation), use it
@@ -26,6 +26,23 @@ const Login = () => {
     }
   }, [emailFromURL]);
 
+  // Effect to handle redirection after successful login and data load
+  useEffect(() => {
+    // Only redirect if user data is available and not during login process
+    if (userData && !loading) {
+      console.log('User role detected:', userData.role);
+
+      // Check role and redirect accordingly
+      if (userData.role === 'admin') {
+        console.log('Redirecting to admin dashboard');
+        navigate('/admin/dashboard');
+      } else {
+        console.log('Redirecting to user dashboard');
+        navigate('/user/dashboard');
+      }
+    }
+  }, [userData, loading, navigate]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -33,17 +50,10 @@ const Login = () => {
       setError('');
       setLoading(true);
       await login({ email, password });
-
-      // Redirect based on user role
-      if (isAdmin) {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/user/dashboard');
-      }
+      // The redirection will happen via useEffect after userData is loaded
     } catch (err) {
       console.error('Login error:', err);
       setError('Failed to sign in. Please check your credentials.');
-    } finally {
       setLoading(false);
     }
   }

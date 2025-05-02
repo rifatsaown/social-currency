@@ -1,7 +1,10 @@
-import { Activity, CreditCard, Loader, RefreshCw, Target } from 'lucide-react';
+import { Activity, CreditCard, Loader, LogOut, RefreshCw, Target } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Campaign, UserDashboardData } from '../../Interface';
+import { useAuth } from '../../context/AuthContext';
 import { userApi } from '../../services/api';
+import { getAuthToken } from '../../utils/authToken';
 import UserLayout from './UserLayout';
 
 const UserDashboard = () => {
@@ -10,6 +13,9 @@ const UserDashboard = () => {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<boolean>(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboardData();
@@ -19,13 +25,36 @@ const UserDashboard = () => {
     try {
       setLoading(true);
       setError(null);
+      setAuthError(false);
+      
+      // Force refresh the token before making the request
+      await getAuthToken(true);
+      
       const data = await userApi.getUserDashboard();
       setDashboardData(data);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
-      setError('Failed to load your dashboard data. Please try again later.');
+      
+      // Check if it's an authentication error
+      if (err instanceof Error && 
+          (err.message.includes('token') || 
+           err.message.includes('auth') || 
+           err.message.includes('401'))) {
+        setAuthError(true);
+      } else {
+        setError('Failed to load your dashboard data. Please try again later.');
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
     }
   };
 
@@ -45,6 +74,54 @@ const UserDashboard = () => {
           <div className="text-center">
             <Loader className="h-8 w-8 animate-spin text-pink-500 mx-auto" />
             <p className="mt-2 text-gray-600">Loading your dashboard...</p>
+          </div>
+        </div>
+      </UserLayout>
+    );
+  }
+
+  if (authError) {
+    return (
+      <UserLayout>
+        <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6">
+          <div className="flex flex-col">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-amber-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-amber-800">
+                  Authentication Error
+                </p>
+                <p className="text-sm text-amber-700 mt-1">
+                  Your session has expired or is invalid. Please try refreshing or log in again.
+                </p>
+              </div>
+            </div>
+            <div className="flex space-x-4 mt-4">
+              <button
+                onClick={fetchDashboardData}
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+              >
+                <RefreshCw size={16} className="mr-2" /> Refresh Session
+              </button>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <LogOut size={16} className="mr-2" /> Log Out
+              </button>
+            </div>
           </div>
         </div>
       </UserLayout>
@@ -83,7 +160,7 @@ const UserDashboard = () => {
       </UserLayout>
     );
   }
-
+  
   if (!dashboardData) {
     return (
       <UserLayout>
