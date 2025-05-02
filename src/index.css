@@ -3,3 +3,24 @@
 * {
   font-family: 'Poppins', sans-serif;
 }
+
+/* Footer animation optimization */
+.footer-animation {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  will-change: opacity, transform;
+}
+
+.footer-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optimize motion animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .footer-animation {
+    transition: none;
+    transform: none;
+  }
+}

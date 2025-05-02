@@ -138,11 +138,11 @@ function GetStart() {
               className="relative z-10"
             >
               <span className="inline-block bg-gradient-to-r from-purple-500/20 to-purple-700/20 px-4 py-2 rounded-full text-purple-300 font-medium mb-4">
-                WELCOME TO THE WYLD REVOLUTION
+                WELCOME TO THE INFLUZIO REVOLUTION
               </span>
 
-              <h1 className="text-5xl md:text-6xl font-bold mb-8 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-100 to-purple-200">
-                THE WORLD'S 1ST SOCIAL CURRENCY APP
+              <h1 className="text-4xl md:text-5xl font-bold mb-8 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-100 to-purple-200">
+              The UK’s 1st influence-powered cashback platform
               </h1>
 
               <p className="text-xl text-purple-200/90 mb-8">

@@ -81,8 +81,8 @@ const Team = () => {
     () => [
       {
         icon: Mail,
-        text: 'saifmjmj17@gmail.com',
-        link: 'mailto:saifmjmj17@gmail.com',
+        text: 'info@influzio.com',
+        link: 'mailto:info@influzio.com',
       },
       {
         icon: Phone,

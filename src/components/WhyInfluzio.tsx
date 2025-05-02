@@ -8,6 +8,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const WhyInfluzio = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -131,6 +132,14 @@ const WhyInfluzio = () => {
     if (el && !highlightTextRefs.current.includes(el)) {
       highlightTextRefs.current.push(el);
     }
+  };
+
+  const navigate = useNavigate();
+
+  // Function to handle the "Get Started" button click will redirect to the /apply-now page
+  const handleGetStartedClick = () => {
+    console.log('Get Started button clicked!');
+    navigate('/apply-now');
   };
 
   const handleStepClick = (index: number) => {
@@ -344,7 +353,10 @@ const WhyInfluzio = () => {
                 </div>
               </div>
 
-              <button className="mt-10 w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-full transition-all hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-black transform hover:scale-[1.02]">
+              <button
+                onClick={handleGetStartedClick}
+                className="mt-10 w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-full transition-all hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-black transform hover:scale-[1.02]"
+              >
                 Get Started Now
               </button>
             </div>

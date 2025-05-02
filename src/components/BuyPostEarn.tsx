@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -14,6 +15,12 @@ const BuyPostEarn = () => {
   const sectionsContainerRef = useRef<HTMLDivElement>(null);
   const linesContainerRef = useRef<HTMLDivElement>(null);
   const particlesContainerRef = useRef<HTMLDivElement>(null);
+
+  const navigate = useNavigate();
+  const handleButtonClick = () => {
+    // Navigate to the application page when the button is clicked
+    navigate('/apply-now');
+  }
 
   // Create a more optimized animation setup
   useEffect(() => {
@@ -406,6 +413,7 @@ const BuyPostEarn = () => {
                   {section.description}
                 </p>
                 <button
+                  onClick={handleButtonClick}
                   className={`cta-button bg-gradient-to-r ${section.buttonColor} text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg font-medium transition-all animate-in transform hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-${section.ringColor} focus:ring-offset-2 focus:ring-offset-black group will-change-transform overflow-hidden relative`}
                   aria-label={`Apply now and discover our partner brands`}
                 >
