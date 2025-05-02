@@ -1,4 +1,11 @@
-import { Activity, CreditCard, Loader, LogOut, RefreshCw, Target } from 'lucide-react';
+import {
+  Activity,
+  CreditCard,
+  Loader,
+  LogOut,
+  RefreshCw,
+  Target,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Campaign, UserDashboardData } from '../../Interface';
@@ -26,20 +33,22 @@ const UserDashboard = () => {
       setLoading(true);
       setError(null);
       setAuthError(false);
-      
+
       // Force refresh the token before making the request
       await getAuthToken(true);
-      
+
       const data = await userApi.getUserDashboard();
       setDashboardData(data);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
-      
+
       // Check if it's an authentication error
-      if (err instanceof Error && 
-          (err.message.includes('token') || 
-           err.message.includes('auth') || 
-           err.message.includes('401'))) {
+      if (
+        err instanceof Error &&
+        (err.message.includes('token') ||
+          err.message.includes('auth') ||
+          err.message.includes('401'))
+      ) {
         setAuthError(true);
       } else {
         setError('Failed to load your dashboard data. Please try again later.');
@@ -104,7 +113,8 @@ const UserDashboard = () => {
                   Authentication Error
                 </p>
                 <p className="text-sm text-amber-700 mt-1">
-                  Your session has expired or is invalid. Please try refreshing or log in again.
+                  Your session has expired or is invalid. Please try refreshing
+                  or log in again.
                 </p>
               </div>
             </div>
@@ -160,7 +170,7 @@ const UserDashboard = () => {
       </UserLayout>
     );
   }
-  
+
   if (!dashboardData) {
     return (
       <UserLayout>

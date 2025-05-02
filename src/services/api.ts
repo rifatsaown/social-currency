@@ -48,13 +48,13 @@ async function fetchWithAuth<T>(
     // If token expired and this is our first try, refresh token and retry
     if (!response.ok && response.status === 401 && retryWithFreshToken) {
       console.log('Token expired, attempting to refresh...');
-      
+
       // Import dynamically to avoid circular dependency
       const { getAuthToken } = await import('../utils/authToken');
-      
+
       // Force refresh the token
       const freshToken = await getAuthToken();
-      
+
       if (freshToken) {
         console.log('Token refreshed, retrying request');
         // Retry the request with fresh token and prevent further retries
@@ -201,10 +201,13 @@ export const userApi = {
     id: string,
     status: 'approved' | 'rejected'
   ): Promise<unknown> => {
-    const response = await fetchWithAuth<unknown>('/users/eligibility-process', {
-      method: 'POST',
-      body: JSON.stringify({ id, status }),
-    });
+    const response = await fetchWithAuth<unknown>(
+      '/users/eligibility-process',
+      {
+        method: 'POST',
+        body: JSON.stringify({ id, status }),
+      }
+    );
     return response.data;
   },
 

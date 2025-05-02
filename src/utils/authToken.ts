@@ -1,10 +1,12 @@
 import { auth } from '../firebase/config';
 
 // Force token refresh interval (20 minutes)
-const TOKEN_REFRESH_INTERVAL = 20 * 60 * 1000; 
+const TOKEN_REFRESH_INTERVAL = 20 * 60 * 1000;
 
 // Get the current Firebase ID token with force refresh option
-export const getAuthToken = async (forceRefresh = true): Promise<string | null> => {
+export const getAuthToken = async (
+  forceRefresh = true
+): Promise<string | null> => {
   try {
     const user = auth.currentUser;
 
@@ -16,12 +18,12 @@ export const getAuthToken = async (forceRefresh = true): Promise<string | null> 
 
     // Force refresh ensures we get a fresh token from Firebase
     const token = await user.getIdToken(forceRefresh);
-    
+
     if (!token) {
       console.error('Failed to obtain token from Firebase');
       return null;
     }
-    
+
     // Store the token only once in localStorage for consistency
     localStorage.setItem('authToken', token);
     console.log('Auth token refreshed and stored');
@@ -47,7 +49,7 @@ export const setupTokenRefresh = (): (() => void) => {
       clearAuthToken();
     }
   });
-  
+
   // Also set up a periodic refresh to ensure we always have a fresh token
   const intervalId = setInterval(async () => {
     if (auth.currentUser) {
