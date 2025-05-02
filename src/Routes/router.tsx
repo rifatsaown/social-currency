@@ -18,6 +18,9 @@ import Participants from '../pages/admin/Participants';
 import CampaignDetail from '../pages/admin/campaign/CampaignDetail';
 import CampaignEdit from '../pages/admin/campaign/CampaignEdit';
 import Campaigns from '../pages/admin/campaign/Campaigns';
+import UserCampaigns from '../pages/user/Campaigns';
+import UserDashboard from '../pages/user/Dashboard';
+import UserWallet from '../pages/user/Wallet';
 import ErrorBoundary from './ErrorBoundary';
 
 const router = createBrowserRouter([
@@ -67,6 +70,7 @@ const router = createBrowserRouter([
       </ErrorBoundary>
     ),
   },
+  // Admin routes
   {
     path: '/admin/dashboard',
     element: (
@@ -146,6 +150,43 @@ const router = createBrowserRouter([
         <AuthProvider>
           <ProtectedRoute requireAdmin>
             <EligibilityChecksPage />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  // User routes
+  {
+    path: '/user/dashboard',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute>
+            <UserDashboard />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/user/campaigns',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute>
+            <UserCampaigns />
+          </ProtectedRoute>
+        </AuthProvider>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: '/user/wallet',
+    element: (
+      <ErrorBoundary>
+        <AuthProvider>
+          <ProtectedRoute>
+            <UserWallet />
           </ProtectedRoute>
         </AuthProvider>
       </ErrorBoundary>

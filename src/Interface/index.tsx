@@ -69,6 +69,7 @@ export interface UserData {
   role?: 'admin' | 'participant';
   status?: 'active' | 'inactive';
   instaHandle?: string;
+  coinBalance?: number;
 }
 
 export interface Participant {
@@ -79,6 +80,7 @@ export interface Participant {
   instaHandle?: string;
   phoneNumber?: string;
   createdAt?: string;
+  coinBalance?: number;
 }
 
 export interface AuthProviderProps {
@@ -142,4 +144,11 @@ export interface CreateCampaignData {
   name: string;
   description?: string;
   participants: string[]; // Array of participant IDs
+}
+
+// User dashboard interface
+export interface UserDashboardData {
+  user: UserData;
+  campaigns: Campaign[];
+  recentActivities: ActivityLog[];
 }

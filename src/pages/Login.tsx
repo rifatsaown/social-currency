@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import logo from '../asset/logo.jpeg';
 import { useAuth } from '../context/AuthContext';
 
@@ -12,7 +16,7 @@ const Login = () => {
   const emailFromURL = searchParams.get('email') || '';
   const [showPassword, setShowPassword] = useState(false);
 
-  const { login } = useAuth();
+  const { login, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   // If email is provided in URL (from invitation), use it
@@ -29,7 +33,13 @@ const Login = () => {
       setError('');
       setLoading(true);
       await login({ email, password });
-      navigate('/admin/dashboard');
+
+      // Redirect based on user role
+      if (isAdmin) {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/user/dashboard');
+      }
     } catch (err) {
       console.error('Login error:', err);
       setError('Failed to sign in. Please check your credentials.');
@@ -173,31 +183,6 @@ const Login = () => {
               </div>
             </div>
           </div>
-
-          {/* <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-700"
-              >
-                Remember me
-              </label>
-            </div>
-            <div className="text-sm">
-              <Link
-                to="/forgot-password"
-                className="font-medium text-purple-600 hover:text-purple-500"
-              >
-                Forgot password?
-              </Link>
-            </div>
-          </div> */}
 
           <div className="pt-2">
             <button

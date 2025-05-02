@@ -2,6 +2,7 @@ import {
   ApiResponse,
   Campaign,
   CreateCampaignData,
+  UserDashboardData,
   UserData,
 } from '../Interface';
 
@@ -178,6 +179,35 @@ export const userApi = {
         body: JSON.stringify({ id, status }),
       }
     );
+    return response.data;
+  },
+
+  // Get user campaigns
+  getUserCampaigns: async (userId: string): Promise<Campaign[]> => {
+    const response = await fetchWithAuth<Campaign[]>(
+      `/users/campaigns/${userId}`
+    );
+    return response.data;
+  },
+
+  // Update user coin balance
+  updateCoinBalance: async (
+    userId: string,
+    amount: number
+  ): Promise<UserData> => {
+    const response = await fetchWithAuth<UserData>(
+      `/users/update-coin-balance`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ userId, amount }),
+      }
+    );
+    return response.data;
+  },
+
+  // Get user dashboard data
+  getUserDashboard: async (): Promise<UserDashboardData> => {
+    const response = await fetchWithAuth<UserDashboardData>('/users/dashboard');
     return response.data;
   },
 };
