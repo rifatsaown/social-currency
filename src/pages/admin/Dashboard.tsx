@@ -490,14 +490,16 @@ const Dashboard = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-medium">
-                              {activity.userId.fullName?.charAt(0) || 'U'}
+                              {activity.userId && activity.userId.fullName
+                                ? activity.userId.fullName.charAt(0)
+                                : 'U'}
                             </div>
                             <div className="ml-3">
                               <p className="text-sm font-medium text-gray-900">
-                                {activity.userId.fullName}
+                                {activity.userId?.fullName || 'Unknown User'}
                               </p>
                               <p className="text-sm text-gray-500">
-                                {activity.userId.email}
+                                {activity.userId?.email || 'No email'}
                               </p>
                             </div>
                           </div>
