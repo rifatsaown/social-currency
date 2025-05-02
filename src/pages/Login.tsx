@@ -175,7 +175,7 @@ const Login = () => {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <input
                 id="remember-me"
                 name="remember-me"
@@ -188,15 +188,15 @@ const Login = () => {
               >
                 Remember me
               </label>
-            </div>
-            <div className="text-sm">
+            </div> */}
+            {/* <div className="text-sm">
               <Link
                 to="/forgot-password"
                 className="font-medium text-purple-600 hover:text-purple-500"
               >
                 Forgot password?
               </Link>
-            </div>
+            </div> */}
           </div>
 
           <div className="pt-2">
@@ -244,10 +244,10 @@ const Login = () => {
           <p className="text-sm text-gray-600">
             Don't have an account?{' '}
             <Link
-              to="/signup"
+              to="/apply-now"
               className="font-medium text-purple-600 hover:text-purple-500"
             >
-              Contact administrator
+              Apply Now
             </Link>
           </p>
         </div>

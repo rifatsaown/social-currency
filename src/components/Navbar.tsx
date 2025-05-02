@@ -289,6 +289,13 @@ const Navbar = () => {
               />
             </Link>
           </div>
+          <div className="mt-4 sm:mt-6">
+            <Link to="/login">
+              <CustomButton
+                buttonText="Log In"
+              />
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
